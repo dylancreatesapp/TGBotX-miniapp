@@ -2,182 +2,208 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>TGBotX Mini-App</title>
-    <!-- Using Bootstrap for responsive layout -->
+    <title>TGBotX Dark UI</title>
+    <!-- Bootstrap for layout & responsiveness -->
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
     />
-    <!-- Google Font for a modern look -->
+    <!-- Font Awesome for icons -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap"
       rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      integrity="sha512-AZl+nX6I6SG8AHcZ5vuT1PO81jjcBM2cYPZPa60nGfpEpAxN1TvzGj6S3LD6Ug+whZzJ3RNaX6h+u8JEPz9K9Q=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
     />
     <style>
-      /* Global styles */
+      /* Dark theme background & text */
       body {
-        background: #f1f1f1;
-        font-family: 'Roboto', sans-serif;
-        color: #333;
+        background-color: #121212;
+        color: #ffffff;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin-bottom: 80px; /* space for bottom content if needed */
       }
-      /* Container styling with soft shadow and rounded corners */
-      .container {
-        .container {
-  background: #fff;
-  border-radius: 15px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  padding: 30px;
-  margin: 20px auto;
-  width: 95%;
-  max-width: 600px; 
-}
-
+      /* Container styling for the main content */
+      .main-container {
+        margin: 20px auto;
+        max-width: 500px;
       }
-      /* Header styling */
-      .header {
-        text-align: center;
-        margin-bottom: 30px;
+      /* Header / Top balance card */
+      .balance-card {
+        background: #1e1e1e;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
       }
-      .header h1 {
-        font-size: 2.5rem;
-        margin-bottom: 5px;
-        color: #444;
+      .balance-title {
+        font-size: 1rem;
+        color: #bbb;
       }
-      .header p {
-        font-size: 1.1rem;
-        color: #666;
+      .balance-amount {
+        font-size: 2rem;
+        font-weight: 600;
+        margin-top: 5px;
       }
-      /* Rounded, curvy buttons with smooth transitions */
-      button {
-        border-radius: 50px;
-        padding: 10px 20px;
-        transition: all 0.3s ease;
-        font-weight: 500;
+      /* Row of large buttons (Launch token, Memepad, Trading bot) */
+      .feature-buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+      .feature-button {
+        flex: 1;
+        background: #2a2a2a;
         border: none;
+        border-radius: 10px;
+        margin: 0 5px;
+        padding: 15px;
+        text-align: center;
+        color: #fff;
+        font-size: 0.9rem;
+        transition: 0.3s;
       }
-      button:hover {
-        opacity: 0.9;
+      .feature-button i {
+        display: block;
+        font-size: 1.3rem;
+        margin-bottom: 5px;
       }
-      /* Custom button colors */
-      .btn-primary {
-        background-color: #4a4a4a;
+      .feature-button:hover {
+        background: #3a3a3a;
       }
-      .btn-secondary {
-        background-color: #888;
+      /* Card-like sections for check-in, season info, points, etc. */
+      .dark-card {
+        background: #1e1e1e;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
       }
-      .btn-success {
-        background-color: #5cb85c;
+      .dark-card h5 {
+        font-size: 1.1rem;
+        margin-bottom: 10px;
       }
-      /* Input field styling */
-      .form-control {
-        border-radius: 50px;
-        border: 1px solid #ccc;
+      .dark-card p {
+        color: #ccc;
+        margin-bottom: 10px;
       }
-      /* Footer styling */
+      .claim-btn,
+      .how-it-works-btn {
+        background: #2f2f2f;
+        border: none;
+        border-radius: 10px;
+        color: #fff;
+        padding: 10px 15px;
+        font-size: 0.9rem;
+        margin-right: 10px;
+      }
+      .claim-btn:hover,
+      .how-it-works-btn:hover {
+        background: #404040;
+      }
+      .points-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .points-list li {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 8px;
+      }
+      .points-list li span {
+        color: #aaa;
+      }
+      /* Footer (fixed at bottom if you like) */
       .footer {
         text-align: center;
-        margin-top: 30px;
-        font-size: 0.9rem;
-        color: #999;
+        padding: 10px;
+        color: #888;
+        font-size: 0.8rem;
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <!-- Header -->
-      <div class="header">
-        <h1>TGBotX Mini-App</h1>
-        <p>Your gateway to token management</p>
+    <div class="main-container">
+      <!-- Top Card: Balance -->
+      <div class="balance-card">
+        <div class="balance-title">Total balance</div>
+        <div class="balance-amount">$0</div>
       </div>
 
-      <!-- User Info -->
-      <p id="user-info" class="fs-5">Loading user info...</p>
-
-      <!-- Action Buttons -->
-      <div class="mb-4">
-        <button id="check-token" class="btn btn-primary me-2">
-          Check My Token Balance
+      <!-- Row of Feature Buttons -->
+      <div class="feature-buttons">
+        <button class="feature-button">
+          <i class="fas fa-rocket"></i>
+          Launch token
         </button>
-        <button id="clear-result" class="btn btn-secondary">
-          Clear
+        <button class="feature-button">
+          <i class="fas fa-gem"></i>
+          Memepad
+        </button>
+        <button class="feature-button">
+          <i class="fas fa-chart-line"></i>
+          Trading bot
         </button>
       </div>
 
-      <!-- Wallet Address Input -->
-      <div class="mb-3">
-        <label for="walletAddress" class="form-label">
-          Enter Your Wallet Address:
-        </label>
-        <input
-          type="text"
-          class="form-control"
-          id="walletAddress"
-          placeholder="e.g., 0x1234...abcd"
-        />
+      <!-- Check-in Card -->
+      <div class="dark-card">
+        <h5>0-days check-in</h5>
+        <p>Next claim in 2h 15m</p>
+        <button class="claim-btn">Claim</button>
       </div>
-      <button id="check-wallet" class="btn btn-success">
-        Check Balance
-      </button>
 
-      <!-- Error Message Area -->
-      <div id="error-message" class="mt-2 text-danger"></div>
-
-      <!-- Result Display Area -->
-      <div id="result" class="mt-3"></div>
-
-      <!-- Footer -->
-      <div class="footer">
-        &copy; 2025 TGBotX. All rights reserved.
+      <!-- Season Info Card -->
+      <div class="dark-card">
+        <h5>Season 2 is here</h5>
+        <p>Trade or launch your own token to get Meme points.</p>
+        <button class="how-it-works-btn">How it works</button>
       </div>
+
+      <!-- Points Card -->
+      <div class="dark-card">
+        <h5>Points</h5>
+        <ul class="points-list">
+          <li>
+            <strong>Meme points</strong>
+            <span>0 MP</span>
+          </li>
+          <li>
+            <strong>Blum points</strong>
+            <span>0.41 BP</span>
+          </li>
+        </ul>
+        <div class="mt-3">
+          <button class="claim-btn">Claim 63.3 BP</button>
+          <button class="claim-btn">Trade to earn</button>
+        </div>
+      </div>
+
+      <!-- Example usage: Telegram user info detection (optional) -->
+      <div class="dark-card" id="tg-info" style="display: none;">
+        <h5 id="user-info">Hello from outside Telegram!</h5>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      &copy; 2025 TGBotX. All rights reserved.
     </div>
 
     <script>
       (function () {
-        // Check if we're inside Telegram
+        // Check if we're inside Telegram WebApp
         let tg;
         if (typeof window.Telegram !== 'undefined' && window.Telegram.WebApp) {
           tg = window.Telegram.WebApp;
           tg.expand();
           const initDataUnsafe = tg.initDataUnsafe || {};
+          // Display user info card
+          document.getElementById("tg-info").style.display = "block";
           document.getElementById("user-info").innerText =
             "Hello " + (initDataUnsafe.user?.first_name || "mysterious user") + "!";
-        } else {
-          document.getElementById("user-info").innerText =
-            "Hello from outside Telegram!";
         }
-
-        // "Check My Token Balance" button functionality
-        document.getElementById("check-token").addEventListener("click", () => {
-          document.getElementById("result").innerText = "You currently hold 100 tokens.";
-        });
-
-        // "Check Balance" button for wallet address input
-        document.getElementById("check-wallet").addEventListener("click", () => {
-          const walletAddress = document.getElementById("walletAddress").value.trim();
-          const errorMessage = document.getElementById("error-message");
-          const result = document.getElementById("result");
-
-          // Clear any previous error message
-          errorMessage.innerText = "";
-
-          // Validate the input
-          if (!walletAddress) {
-            errorMessage.innerText = "Please enter a valid wallet address.";
-            return;
-          }
-
-          // Simulate a delay while checking the balance
-          result.innerText = "Checking balance...";
-          setTimeout(() => {
-            result.innerText = `Wallet ${walletAddress} has 500 tokens (simulated).`;
-          }, 1000);
-        });
-
-        // "Clear" button functionality
-        document.getElementById("clear-result").addEventListener("click", () => {
-          document.getElementById("result").innerText = "";
-          document.getElementById("error-message").innerText = "";
-        });
       })();
     </script>
   </body>
