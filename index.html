@@ -11,23 +11,39 @@
   </head>
   <body class="bg-light text-dark">
     <div class="container my-5">
+      <!-- Title and user info -->
       <h1 class="mb-4">Welcome to TGBotX Mini-App</h1>
       <p id="user-info">Loading user info...</p>
-      <button id="check-token" class="btn btn-primary">
-        <div class="mb-3">
-  <label for="walletAddress" class="form-label">Enter Your Wallet Address:</label>
-  <input type="text" class="form-control" id="walletAddress" placeholder="e.g., 0x1234...abcd">
-</div>
-<button id="check-wallet" class="btn btn-secondary">Check Balance</button>
-<div id="error-message" class="mt-2 text-danger"></div>
 
+      <!-- Existing button: Check My Token Balance -->
+      <button id="check-token" class="btn btn-primary">
         Check My Token Balance
       </button>
+
+      <!-- New wallet address input section -->
+      <div class="mb-3 mt-4">
+        <label for="walletAddress" class="form-label">Enter Your Wallet Address:</label>
+        <input
+          type="text"
+          class="form-control"
+          id="walletAddress"
+          placeholder="e.g., 0x1234...abcd"
+        />
+      </div>
+
+      <button id="check-wallet" class="btn btn-secondary">
+        Check Balance
+      </button>
+
+      <!-- Area for error messages -->
+      <div id="error-message" class="mt-2 text-danger"></div>
+
+      <!-- Result display -->
       <div id="result" class="mt-3"></div>
     </div>
 
     <script>
-      // Access Telegram's WebApp API (only available when opened inside Telegram)
+      // The Telegram WebApp object (only available when opened inside Telegram)
       let tg = window.Telegram.WebApp;
       tg.expand(); // Expand the mini-app to full height
 
@@ -36,12 +52,33 @@
       document.getElementById("user-info").innerText =
         "Hello " + (initDataUnsafe.user?.first_name || "mysterious user") + "!";
 
-      // Example functionality: Check token balance (for demonstration, it shows a fixed value)
+      // Existing "Check My Token Balance" button functionality (simple example)
       document.getElementById("check-token").addEventListener("click", () => {
-        // Replace this with real blockchain integration later
+        // For demonstration, let's say the user has 100 tokens
         let tokenBalance = 100;
         document.getElementById("result").innerText =
           `You currently hold ${tokenBalance} tokens.`;
+      });
+
+      // New "Check Balance" button for the wallet address input
+      document.getElementById("check-wallet").addEventListener("click", () => {
+        const walletAddress = document
+          .getElementById("walletAddress")
+          .value.trim();
+        const errorMessage = document.getElementById("error-message");
+        const result = document.getElementById("result");
+
+        // Clear any previous error
+        errorMessage.innerText = "";
+
+        // Validate the input
+        if (!walletAddress) {
+          errorMessage.innerText = "Please enter a valid wallet address.";
+          return;
+        }
+
+        // For now, we simulate a balance check
+        result.innerText = `Wallet ${walletAddress} has 500 tokens (simulated).`;
       });
     </script>
   </body>
