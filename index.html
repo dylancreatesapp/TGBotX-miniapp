@@ -43,43 +43,51 @@
     </div>
 
     <script>
-      // The Telegram WebApp object (only available when opened inside Telegram)
-      let tg = window.Telegram.WebApp;
-      tg.expand(); // Expand the mini-app to full height
+      (function() {
+        // 1) Check if we're inside Telegram
+        let tg;
+        if (typeof window.Telegram !== 'undefined' && window.Telegram.WebApp) {
+          tg = window.Telegram.WebApp;
+          tg.expand(); // Expand the mini-app to full height inside Telegram
 
-      // Display the user's Telegram first name (if available)
-      const initDataUnsafe = tg.initDataUnsafe || {};
-      document.getElementById("user-info").innerText =
-        "Hello " + (initDataUnsafe.user?.first_name || "mysterious user") + "!";
-
-      // Existing "Check My Token Balance" button functionality (simple example)
-      document.getElementById("check-token").addEventListener("click", () => {
-        // For demonstration, let's say the user has 100 tokens
-        let tokenBalance = 100;
-        document.getElementById("result").innerText =
-          `You currently hold ${tokenBalance} tokens.`;
-      });
-
-      // New "Check Balance" button for the wallet address input
-      document.getElementById("check-wallet").addEventListener("click", () => {
-        const walletAddress = document
-          .getElementById("walletAddress")
-          .value.trim();
-        const errorMessage = document.getElementById("error-message");
-        const result = document.getElementById("result");
-
-        // Clear any previous error
-        errorMessage.innerText = "";
-
-        // Validate the input
-        if (!walletAddress) {
-          errorMessage.innerText = "Please enter a valid wallet address.";
-          return;
+          // Display the Telegram user's first name (if available)
+          const initDataUnsafe = tg.initDataUnsafe || {};
+          document.getElementById("user-info").innerText =
+            "Hello " + (initDataUnsafe.user?.first_name || "mysterious user") + "!";
+        } else {
+          // Fallback for normal browsers
+          document.getElementById("user-info").innerText =
+            "Hello from outside Telegram!";
         }
 
-        // For now, we simulate a balance check
-        result.innerText = `Wallet ${walletAddress} has 500 tokens (simulated).`;
-      });
+        // 2) "Check My Token Balance" button (simple example)
+        document.getElementById("check-token").addEventListener("click", () => {
+          let tokenBalance = 100; // simulate a token balance
+          document.getElementById("result").innerText =
+            `You currently hold ${tokenBalance} tokens.`;
+        });
+
+        // 3) "Check Balance" button for the wallet address input
+        document.getElementById("check-wallet").addEventListener("click", () => {
+          const walletAddress = document
+            .getElementById("walletAddress")
+            .value.trim();
+          const errorMessage = document.getElementById("error-message");
+          const result = document.getElementById("result");
+
+          // Clear any previous error
+          errorMessage.innerText = "";
+
+          // Validate the input
+          if (!walletAddress) {
+            errorMessage.innerText = "Please enter a valid wallet address.";
+            return;
+          }
+
+          // For now, we simulate a balance check
+          result.innerText = `Wallet ${walletAddress} has 500 tokens (simulated).`;
+        });
+      })();
     </script>
   </body>
 </html>
