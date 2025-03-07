@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>TGBotX Dark UI</title>
+    <title>TGBotX Mini-App (Dark UI)</title>
     <!-- Bootstrap for layout & responsiveness -->
     <link
       rel="stylesheet"
@@ -17,189 +17,223 @@
       referrerpolicy="no-referrer"
     />
     <style>
-      /* Dark theme background & text */
+      /* Overall dark background */
       body {
         background-color: #121212;
         color: #ffffff;
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        margin-bottom: 80px; /* space for bottom content if needed */
+        margin: 0;
+        padding: 0;
       }
-      /* Container styling for the main content */
-      .main-container {
-        margin: 20px auto;
-        max-width: 500px;
-      }
-      /* Header / Top balance card */
-      .balance-card {
-        background: #1e1e1e;
-        border-radius: 12px;
-        padding: 20px;
-        margin-bottom: 20px;
-      }
-      .balance-title {
-        font-size: 1rem;
-        color: #bbb;
-      }
-      .balance-amount {
-        font-size: 2rem;
-        font-weight: 600;
-        margin-top: 5px;
-      }
-      /* Row of large buttons (Launch token, Memepad, Trading bot) */
-      .feature-buttons {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 20px;
-      }
-      .feature-button {
-        flex: 1;
-        background: #2a2a2a;
-        border: none;
-        border-radius: 10px;
-        margin: 0 5px;
+      /* Header area */
+      .app-header {
+        background-color: #1e1e1e;
         padding: 15px;
         text-align: center;
-        color: #fff;
+      }
+      .app-header h1 {
+        font-size: 1.4rem;
+        margin: 0;
+      }
+      .app-header p {
+        margin: 5px 0 0 0;
         font-size: 0.9rem;
-        transition: 0.3s;
+        color: #ccc;
       }
-      .feature-button i {
-        display: block;
-        font-size: 1.3rem;
-        margin-bottom: 5px;
+      /* Main container */
+      .main-container {
+        margin: 0 auto;
+        max-width: 500px;
+        padding: 20px;
       }
-      .feature-button:hover {
-        background: #3a3a3a;
-      }
-      /* Card-like sections for check-in, season info, points, etc. */
+      /* Card styling */
       .dark-card {
-        background: #1e1e1e;
+        background-color: #1e1e1e;
         border-radius: 12px;
         padding: 20px;
         margin-bottom: 20px;
       }
-      .dark-card h5 {
-        font-size: 1.1rem;
-        margin-bottom: 10px;
+      .dark-card h4 {
+        margin-bottom: 15px;
       }
-      .dark-card p {
+      .dark-card label {
         color: #ccc;
-        margin-bottom: 10px;
       }
-      .claim-btn,
-      .how-it-works-btn {
-        background: #2f2f2f;
+      /* Rounded buttons */
+      .btn-rounded {
+        border-radius: 50px;
         border: none;
-        border-radius: 10px;
+        padding: 10px 20px;
+        font-weight: 500;
+        transition: background 0.3s;
+      }
+      .btn-rounded i {
+        margin-right: 8px;
+      }
+      /* Button colors */
+      .btn-dark-mode {
+        background-color: #2a2a2a;
         color: #fff;
-        padding: 10px 15px;
-        font-size: 0.9rem;
-        margin-right: 10px;
       }
-      .claim-btn:hover,
-      .how-it-works-btn:hover {
-        background: #404040;
+      .btn-dark-mode:hover {
+        background-color: #3a3a3a;
       }
-      .points-list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
+      .btn-success-mode {
+        background-color: #3d9140;
+        color: #fff;
       }
-      .points-list li {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 8px;
+      .btn-success-mode:hover {
+        background-color: #4ba74e;
       }
-      .points-list li span {
-        color: #aaa;
+      .btn-secondary-mode {
+        background-color: #444;
+        color: #fff;
       }
-      /* Footer (fixed at bottom if you like) */
+      .btn-secondary-mode:hover {
+        background-color: #555;
+      }
+      /* Input field */
+      .form-control {
+        background-color: #2a2a2a;
+        border: 1px solid #444;
+        color: #fff;
+        border-radius: 50px;
+      }
+      .form-control:focus {
+        background-color: #2a2a2a;
+        color: #fff;
+        outline: none;
+        box-shadow: none;
+        border-color: #666;
+      }
+      /* Result and error display */
+      #error-message {
+        color: #ff7373;
+        margin-top: 10px;
+      }
+      #result {
+        background: #2a2a2a;
+        border-radius: 10px;
+        padding: 10px;
+        margin-top: 10px;
+      }
+      /* Footer (optional) */
       .footer {
         text-align: center;
-        padding: 10px;
         color: #888;
         font-size: 0.8rem;
+        margin: 20px 0;
       }
     </style>
   </head>
   <body>
-    <div class="main-container">
-      <!-- Top Card: Balance -->
-      <div class="balance-card">
-        <div class="balance-title">Total balance</div>
-        <div class="balance-amount">$0</div>
-      </div>
-
-      <!-- Row of Feature Buttons -->
-      <div class="feature-buttons">
-        <button class="feature-button">
-          <i class="fas fa-rocket"></i>
-          Launch token
-        </button>
-        <button class="feature-button">
-          <i class="fas fa-gem"></i>
-          Memepad
-        </button>
-        <button class="feature-button">
-          <i class="fas fa-chart-line"></i>
-          Trading bot
-        </button>
-      </div>
-
-      <!-- Check-in Card -->
-      <div class="dark-card">
-        <h5>0-days check-in</h5>
-        <p>Next claim in 2h 15m</p>
-        <button class="claim-btn">Claim</button>
-      </div>
-
-      <!-- Season Info Card -->
-      <div class="dark-card">
-        <h5>Season 2 is here</h5>
-        <p>Trade or launch your own token to get Meme points.</p>
-        <button class="how-it-works-btn">How it works</button>
-      </div>
-
-      <!-- Points Card -->
-      <div class="dark-card">
-        <h5>Points</h5>
-        <ul class="points-list">
-          <li>
-            <strong>Meme points</strong>
-            <span>0 MP</span>
-          </li>
-        </ul>
-        <div class="mt-3">
-          <button class="claim-btn">Claim 63.3 BP</button>
-          <button class="claim-btn">Trade to earn</button>
-        </div>
-      </div>
-
-      <!-- Example usage: Telegram user info detection (optional) -->
-      <div class="dark-card" id="tg-info" style="display: none;">
-        <h5 id="user-info">Hello from outside Telegram!</h5>
-      </div>
+    <!-- Header -->
+    <div class="app-header">
+      <h1>TGBotX Mini App</h1>
+      <p id="user-info">Loading user info...</p>
     </div>
 
-    <!-- Footer -->
-    <div class="footer">
-      &copy; 2025 TGBotX. All rights reserved.
+    <!-- Main Container -->
+    <div class="main-container">
+      <!-- Card: Balance -->
+      <div class="dark-card">
+        <h4>Balance</h4>
+        <p id="balance-info" style="font-size:1.2rem;">0 tokens</p>
+        <button id="check-token" class="btn-rounded btn-dark-mode">
+          <i class="fas fa-coins"></i>
+          Check My Token Balance
+        </button>
+        <button id="clear-result" class="btn-rounded btn-secondary-mode ms-2">
+          <i class="fas fa-undo"></i>
+          Clear
+        </button>
+      </div>
+
+      <!-- Card: Wallet Address -->
+      <div class="dark-card">
+        <h4>Check Wallet Balance</h4>
+        <div class="mb-3">
+          <label for="walletAddress" class="form-label">Wallet Address</label>
+          <input
+            type="text"
+            class="form-control"
+            id="walletAddress"
+            placeholder="e.g., 0x1234...abcd"
+          />
+        </div>
+        <button id="check-wallet" class="btn-rounded btn-success-mode">
+          <i class="fas fa-wallet"></i>
+          Check Balance
+        </button>
+        <div id="error-message"></div>
+        <div id="result" style="display:none;"></div>
+      </div>
+
+      <!-- Optional Footer -->
+      <div class="footer">
+        &copy; 2025 TGBotX. All rights reserved.
+      </div>
     </div>
 
     <script>
       (function () {
-        // Check if we're inside Telegram WebApp
+        // 1) Telegram detection
         let tg;
-        if (typeof window.Telegram !== 'undefined' && window.Telegram.WebApp) {
+        if (typeof window.Telegram !== "undefined" && window.Telegram.WebApp) {
           tg = window.Telegram.WebApp;
           tg.expand();
           const initDataUnsafe = tg.initDataUnsafe || {};
-          // Display user info card
-          document.getElementById("tg-info").style.display = "block";
           document.getElementById("user-info").innerText =
             "Hello " + (initDataUnsafe.user?.first_name || "mysterious user") + "!";
+        } else {
+          document.getElementById("user-info").innerText =
+            "Hello from outside Telegram!";
         }
+
+        // 2) "Check My Token Balance" button
+        const checkTokenBtn = document.getElementById("check-token");
+        const balanceInfo = document.getElementById("balance-info");
+        checkTokenBtn.addEventListener("click", () => {
+          // Simulate a token balance check
+          balanceInfo.textContent = "You currently hold 100 tokens.";
+        });
+
+        // 3) Clear button
+        const clearBtn = document.getElementById("clear-result");
+        clearBtn.addEventListener("click", () => {
+          balanceInfo.textContent = "0 tokens";
+          document.getElementById("error-message").textContent = "";
+          document.getElementById("result").style.display = "none";
+          document.getElementById("result").textContent = "";
+        });
+
+        // 4) "Check Balance" for wallet address
+        const checkWalletBtn = document.getElementById("check-wallet");
+        checkWalletBtn.addEventListener("click", () => {
+          const walletAddress = document
+            .getElementById("walletAddress")
+            .value.trim();
+          const errorMessage = document.getElementById("error-message");
+          const result = document.getElementById("result");
+
+          // Clear old messages
+          errorMessage.textContent = "";
+          result.style.display = "none";
+          result.textContent = "";
+
+          // Validate input
+          if (!walletAddress) {
+            errorMessage.textContent = "Please enter a valid wallet address.";
+            return;
+          }
+
+          // Simulate checking balance
+          result.style.display = "block";
+          result.textContent = "Checking balance...";
+          setTimeout(() => {
+            result.textContent = `Wallet ${walletAddress} has 500 tokens (simulated).`;
+          }, 1000);
+        });
       })();
     </script>
   </body>
