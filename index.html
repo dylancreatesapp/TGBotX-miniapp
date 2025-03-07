@@ -8,21 +8,61 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
     />
+    <style>
+      /* Custom CSS enhancements */
+      body {
+        background: #f8f9fa;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+      .header {
+        background: #343a40;
+        color: #fff;
+        padding: 20px;
+        text-align: center;
+      }
+      .footer {
+        background: #343a40;
+        color: #fff;
+        padding: 10px;
+        text-align: center;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+      }
+      #result {
+        background-color: #e9ecef;
+        padding: 15px;
+        border-radius: 5px;
+        margin-top: 15px;
+      }
+    </style>
   </head>
-  <body class="bg-light text-dark">
+  <body>
+    <!-- Header with Navigation -->
+    <div class="header">
+      <h1>TGBotX Mini-App</h1>
+      <p>Your gateway to token management</p>
+    </div>
+
     <div class="container my-5">
-      <!-- Title and user info -->
-      <h1 class="mb-4">Welcome to TGBotX Mini-App</h1>
-      <p id="user-info">Loading user info...</p>
+      <!-- User Info Section -->
+      <p id="user-info" class="fs-4">Loading user info...</p>
 
-      <!-- Existing button: Check My Token Balance -->
-      <button id="check-token" class="btn btn-primary">
-        Check My Token Balance
-      </button>
+      <!-- Buttons Section -->
+      <div class="mb-4">
+        <button id="check-token" class="btn btn-primary me-2">
+          Check My Token Balance
+        </button>
+        <button id="clear-result" class="btn btn-secondary">
+          Clear
+        </button>
+      </div>
 
-      <!-- New wallet address input section -->
-      <div class="mb-3 mt-4">
-        <label for="walletAddress" class="form-label">Enter Your Wallet Address:</label>
+      <!-- Wallet Address Input Section -->
+      <div class="mb-3">
+        <label for="walletAddress" class="form-label">
+          Enter Your Wallet Address:
+        </label>
         <input
           type="text"
           class="form-control"
@@ -30,52 +70,49 @@
           placeholder="e.g., 0x1234...abcd"
         />
       </div>
-
-      <button id="check-wallet" class="btn btn-secondary">
+      <button id="check-wallet" class="btn btn-success">
         Check Balance
       </button>
 
-      <!-- Area for error messages -->
+      <!-- Error Message Area -->
       <div id="error-message" class="mt-2 text-danger"></div>
 
-      <!-- Result display -->
+      <!-- Result Display Area -->
       <div id="result" class="mt-3"></div>
     </div>
 
+    <!-- Footer -->
+    <div class="footer">
+      &copy; 2025 TGBotX. All rights reserved.
+    </div>
+
     <script>
-      (function() {
-        // 1) Check if we're inside Telegram
+      (function () {
+        // Check if we're inside Telegram
         let tg;
         if (typeof window.Telegram !== 'undefined' && window.Telegram.WebApp) {
           tg = window.Telegram.WebApp;
-          tg.expand(); // Expand the mini-app to full height inside Telegram
-
-          // Display the Telegram user's first name (if available)
+          tg.expand();
           const initDataUnsafe = tg.initDataUnsafe || {};
           document.getElementById("user-info").innerText =
             "Hello " + (initDataUnsafe.user?.first_name || "mysterious user") + "!";
         } else {
-          // Fallback for normal browsers
           document.getElementById("user-info").innerText =
             "Hello from outside Telegram!";
         }
 
-        // 2) "Check My Token Balance" button (simple example)
+        // "Check My Token Balance" button functionality
         document.getElementById("check-token").addEventListener("click", () => {
-          let tokenBalance = 100; // simulate a token balance
-          document.getElementById("result").innerText =
-            `You currently hold ${tokenBalance} tokens.`;
+          document.getElementById("result").innerText = "You currently hold 100 tokens.";
         });
 
-        // 3) "Check Balance" button for the wallet address input
+        // "Check Balance" button for wallet address input
         document.getElementById("check-wallet").addEventListener("click", () => {
-          const walletAddress = document
-            .getElementById("walletAddress")
-            .value.trim();
+          const walletAddress = document.getElementById("walletAddress").value.trim();
           const errorMessage = document.getElementById("error-message");
           const result = document.getElementById("result");
 
-          // Clear any previous error
+          // Clear any previous error message
           errorMessage.innerText = "";
 
           // Validate the input
@@ -84,8 +121,17 @@
             return;
           }
 
-          // For now, we simulate a balance check
-          result.innerText = `Wallet ${walletAddress} has 500 tokens (simulated).`;
+          // Simulate a delay while checking the balance
+          result.innerText = "Checking balance...";
+          setTimeout(() => {
+            result.innerText = `Wallet ${walletAddress} has 500 tokens (simulated).`;
+          }, 1000);
+        });
+
+        // "Clear" button functionality to clear result and error areas
+        document.getElementById("clear-result").addEventListener("click", () => {
+          document.getElementById("result").innerText = "";
+          document.getElementById("error-message").innerText = "";
         });
       })();
     </script>
