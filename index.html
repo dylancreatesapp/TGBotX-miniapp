@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>TGBotX Mini-App (Larger UI)</title>
-    <!-- Ensure proper mobile scaling -->
+    <title>TGBotX Mini App</title>
+    <!-- Ensure responsive design -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- Bootstrap for layout & responsiveness -->
+    <!-- Bootstrap CSS for layout -->
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
@@ -18,166 +18,347 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
+    <!-- Chart.js for market tracking widget -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- QRCode.js for QR code generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
-      /* Overall dark background */
+      /* Overall dark theme */
       body {
         background-color: #121212;
-        color: #ffffff;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        color: #fff;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
         margin: 0;
         padding: 0;
-        font-size: 1.1rem; /* Increase base font size */
       }
-      /* Header area */
-      .app-header {
-        background-color: #1e1e1e;
-        padding: 15px;
-        text-align: center;
+      /* Navigation tabs */
+      .nav-tabs {
+        border-bottom: 1px solid #333;
+        background: #1e1e1e;
       }
-      .app-header h1 {
-        font-size: 1.6rem; /* Larger title text */
-        margin: 0;
-      }
-      .app-header p {
-        margin: 5px 0 0 0;
+      .nav-tabs .nav-link {
+        color: #bbb;
+        border: none;
+        background: transparent;
         font-size: 1rem;
-        color: #ccc;
+        transition: color 0.3s;
+      }
+      .nav-tabs .nav-link.active {
+        color: #fff;
+        border-bottom: 2px solid #fff;
       }
       /* Main container */
-      .main-container {
-        margin: 0 auto;
-        width: 95%;         /* Use most of the screen width on mobile */
-        padding: 20px;
+      .container-main {
+        width: 95%;
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 15px;
       }
-      /* Card styling */
-      .dark-card {
+      /* Card style for sections */
+      .card-dark {
         background-color: #1e1e1e;
+        border: none;
         border-radius: 12px;
         padding: 20px;
         margin-bottom: 20px;
+        backdrop-filter: blur(4px);
       }
-      .dark-card h4 {
-        margin-bottom: 15px;
-        font-size: 1.3rem;
-      }
-      .dark-card label {
-        color: #ccc;
-        font-size: 1rem;
-      }
-      /* Larger, rounded buttons */
-      .btn-rounded {
+      /* Rounded, modern buttons */
+      .btn-modern {
         border-radius: 50px;
-        border: none;
-        padding: 14px 24px;    /* Increased padding for easier tapping */
-        font-weight: 500;
-        font-size: 1rem;       /* Larger button text */
+        padding: 12px 24px;
+        font-size: 1rem;
         transition: background 0.3s;
       }
-      .btn-rounded i {
-        margin-right: 8px;
-      }
-      /* Button colors */
-      .btn-dark-mode {
+      .btn-primary {
         background-color: #2a2a2a;
-        color: #fff;
+        border: none;
       }
-      .btn-dark-mode:hover {
+      .btn-primary:hover {
         background-color: #3a3a3a;
       }
-      .btn-success-mode {
+      .btn-success {
         background-color: #3d9140;
-        color: #fff;
+        border: none;
       }
-      .btn-success-mode:hover {
+      .btn-success:hover {
         background-color: #4ba74e;
       }
-      .btn-secondary-mode {
+      .btn-secondary {
         background-color: #444;
-        color: #fff;
+        border: none;
       }
-      .btn-secondary-mode:hover {
+      .btn-secondary:hover {
         background-color: #555;
       }
-      /* Input field */
+      /* Form inputs */
       .form-control {
         background-color: #2a2a2a;
         border: 1px solid #444;
         color: #fff;
         border-radius: 50px;
+        padding: 12px 20px;
         font-size: 1rem;
-        padding: 14px 16px; /* Larger input for easier tapping */
       }
       .form-control:focus {
         background-color: #2a2a2a;
         color: #fff;
-        outline: none;
-        box-shadow: none;
         border-color: #666;
+        box-shadow: none;
       }
-      /* Result and error display */
-      #error-message {
-        color: #ff7373;
-        margin-top: 10px;
-        font-size: 1rem;
+      /* Chart container */
+      #market-chart-container {
+        position: relative;
+        height: 250px;
       }
-      #result {
-        background: #2a2a2a;
-        border-radius: 10px;
-        padding: 10px;
-        margin-top: 10px;
-        font-size: 1rem;
-      }
-      /* Footer (optional) */
-      .footer {
+      /* QR code container */
+      #qrcode {
+        margin-top: 15px;
         text-align: center;
-        color: #888;
-        font-size: 0.9rem;
-        margin: 20px 0;
+      }
+      /* Responsive adjustments */
+      @media (max-width: 600px) {
+        .btn-modern {
+          font-size: 1.1rem;
+          padding: 14px 28px;
+        }
       }
     </style>
   </head>
   <body>
-    <!-- Header -->
-    <div class="app-header">
-      <h1>TGBotX Mini App</h1>
-      <p id="user-info">Loading user info...</p>
+    <!-- Navigation Tabs -->
+    <ul class="nav nav-tabs" id="appTabs">
+      <li class="nav-item">
+        <a class="nav-link active" href="#dashboard" data-tab="dashboard"
+          >Dashboard</a
+        >
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#create-token" data-tab="create-token"
+          >Token Creation</a
+        >
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#wallet" data-tab="wallet">Wallet Management</a>
+      </li>
+    </ul>
+
+    <div class="container-main">
+      <!-- Dashboard Section -->
+      <div id="dashboard" class="tab-section">
+        <div class="card-dark">
+          <h4>Dashboard</h4>
+          <p><strong>Token Balance:</strong> <span id="token-balance">0 tokens</span></p>
+          <p><strong>Recent Activity:</strong> <span id="recent-activity">No activity yet</span></p>
+          <p><strong>Usage Hours:</strong> <span id="usage-hours">0 hrs</span></p>
+        </div>
+        <div class="card-dark">
+          <h4>Market Tracker</h4>
+          <div id="market-chart-container">
+            <canvas id="market-chart"></canvas>
+          </div>
+          <p style="font-size: 0.9rem; color: #ccc; margin-top: 10px;">
+            Token Price | Market Cap | Volume
+          </p>
+        </div>
+      </div>
+
+      <!-- Token Creation Section -->
+      <div id="create-token" class="tab-section" style="display:none;">
+        <div class="card-dark">
+          <h4>Create Your Token</h4>
+          <form id="token-form">
+            <div class="mb-3">
+              <label for="tokenName" class="form-label">Token Name</label>
+              <input
+                type="text"
+                class="form-control"
+                id="tokenName"
+                placeholder="Enter token name"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="tokenSymbol" class="form-label">Symbol</label>
+              <input
+                type="text"
+                class="form-control"
+                id="tokenSymbol"
+                placeholder="Enter token symbol"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="tokenSupply" class="form-label">Total Supply</label>
+              <input
+                type="number"
+                class="form-control"
+                id="tokenSupply"
+                placeholder="Enter total supply"
+                required
+              />
+            </div>
+            <button type="submit" class="btn btn-modern btn-primary">
+              <i class="fas fa-check"></i> Create Token
+            </button>
+          </form>
+          <div id="creation-confirmation" style="margin-top: 15px;"></div>
+        </div>
+      </div>
+
+      <!-- Wallet Management Section -->
+      <div id="wallet" class="tab-section" style="display:none;">
+        <div class="card-dark">
+          <h4>Send Tokens</h4>
+          <form id="send-form">
+            <div class="mb-3">
+              <label for="recipientAddress" class="form-label">Recipient Address</label>
+              <input
+                type="text"
+                class="form-control"
+                id="recipientAddress"
+                placeholder="Enter recipient wallet address"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="sendAmount" class="form-label">Amount</label>
+              <input
+                type="number"
+                class="form-control"
+                id="sendAmount"
+                placeholder="Enter amount to send"
+                required
+              />
+            </div>
+            <button type="submit" class="btn btn-modern btn-success">
+              <i class="fas fa-paper-plane"></i> Send Tokens
+            </button>
+          </form>
+          <div id="send-confirmation" style="margin-top: 15px;"></div>
+        </div>
+
+        <div class="card-dark">
+          <h4>Receive Tokens</h4>
+          <p>Your wallet address:</p>
+          <p id="myWalletAddress" style="font-size: 1.1rem;">0xABCDEF123456...</p>
+          <div id="qrcode"></div>
+          <button id="regenerate-qr" class="btn btn-modern btn-secondary" style="margin-top:15px;">
+            <i class="fas fa-sync-alt"></i> Regenerate QR Code
+          </button>
+        </div>
+      </div>
     </div>
 
-    <!-- Main Container -->
-    <div class="main-container">
-      <!-- Card: Balance -->
-      <div class="dark-card">
-        <h4>Balance</h4>
-        <p id="balance-info" style="font-size:1.2rem;">0 tokens</p>
-        <button id="check-token" class="btn-rounded btn-dark-mode">
-          <i class="fas fa-coins"></i>
-          Check My Token Balance
-        </button>
-        <button id="clear-result" class="btn-rounded btn-secondary-mode ms-2">
-          <i class="fas fa-undo"></i>
-          Clear
-        </button>
-      </div>
+    <script>
+      // ----- Tab Switching -----
+      document.querySelectorAll('#appTabs a').forEach((tabLink) => {
+        tabLink.addEventListener('click', function (e) {
+          e.preventDefault();
+          // Remove active class from all tabs
+          document.querySelectorAll('#appTabs a').forEach((el) => el.classList.remove('active'));
+          // Hide all sections
+          document.querySelectorAll('.tab-section').forEach((section) => section.style.display = 'none');
+          // Activate current tab and show section
+          this.classList.add('active');
+          document.getElementById(this.getAttribute('data-tab')).style.display = 'block';
+        });
+      });
 
-      <!-- Card: Wallet Address -->
-      <div class="dark-card">
-        <h4>Check Wallet Balance</h4>
-        <div class="mb-3">
-          <label for="walletAddress" class="form-label">Wallet Address</label>
-          <input
-            type="text"
-            class="form-control"
-            id="walletAddress"
-            placeholder="e.g., 0x1234...abcd"
-          />
-        </div>
-        <button id="check-wallet" class="btn-rounded btn-success-mode">
-          <i class="fas fa-wallet"></i>
-          Check Balance
-        </button>
-        <div id="error-message"></div>
-        <div id="result" style="display:none;"></div>
-      </div>
+      // ----- Telegram WebApp Integration -----
+      (function () {
+        if (typeof window.Telegram !== "undefined" && window.Telegram.WebApp) {
+          const tg = window.Telegram.WebApp;
+          tg.expand();
+          const initData = tg.initDataUnsafe || {};
+          // Replace the header user info if available
+          document.getElementById("app-header")?.remove(); // Remove any previous header if exists
+          const userInfoElem = document.getElementById("user-info");
+          userInfoElem.innerText =
+            "Hello " + (initData.user?.first_name || "mysterious user") + "!";
+        }
+      })();
 
-      <!-- Optional Footer -->
-      <div class="foo
+      // ----- Dashboard: Market Tracking Widget (using Chart.js) -----
+      const ctx = document.getElementById('market-chart').getContext('2d');
+      // Dummy data for the chart
+      const marketChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00'],
+          datasets: [{
+            label: 'Token Price',
+            data: [1.0, 1.2, 1.15, 1.3, 1.25, 1.4, 1.35],
+            borderColor: '#4ba74e',
+            backgroundColor: 'rgba(75, 167, 78, 0.2)',
+            fill: true,
+            tension: 0.3
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            x: {
+              ticks: { color: '#ccc' },
+              grid: { color: 'rgba(255,255,255,0.1)' }
+            },
+            y: {
+              ticks: { color: '#ccc' },
+              grid: { color: 'rgba(255,255,255,0.1)' }
+            }
+          },
+          plugins: {
+            legend: { labels: { color: '#ccc' } }
+          }
+        }
+      });
+
+      // ----- Token Creation Section -----
+      document.getElementById('token-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const name = document.getElementById('tokenName').value.trim();
+        const symbol = document.getElementById('tokenSymbol').value.trim();
+        const supply = document.getElementById('tokenSupply').value.trim();
+        const confirmation = document.getElementById('creation-confirmation');
+        if (name && symbol && supply) {
+          confirmation.innerHTML = `<div style="padding:10px; background:#2a2a2a; border-radius:10px; margin-top:10px;">Token <strong>${name}</strong> (${symbol}) with supply <strong>${supply}</strong> created successfully! (Simulated)</div>`;
+          this.reset();
+        } else {
+          confirmation.innerHTML = `<div style="color:#ff7373; margin-top:10px;">Please fill out all fields.</div>`;
+        }
+      });
+
+      // ----- Wallet Management: Send Tokens -----
+      document.getElementById('send-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const recipient = document.getElementById('recipientAddress').value.trim();
+        const amount = document.getElementById('sendAmount').value.trim();
+        const confirmation = document.getElementById('send-confirmation');
+        if (recipient && amount) {
+          confirmation.innerHTML = `<div style="padding:10px; background:#2a2a2a; border-radius:10px; margin-top:10px;">Sent ${amount} tokens to ${recipient} successfully! (Simulated)</div>`;
+          this.reset();
+        } else {
+          confirmation.innerHTML = `<div style="color:#ff7373; margin-top:10px;">Please fill out all fields.</div>`;
+        }
+      });
+
+      // ----- Wallet Management: QR Code Generation for Receiving Tokens -----
+      function generateQRCode() {
+        const qrcodeContainer = document.getElementById('qrcode');
+        qrcodeContainer.innerHTML = "";
+        // Using a dummy wallet address; replace with the actual address as needed
+        new QRCode(qrcodeContainer, {
+          text: document.getElementById('myWalletAddress').textContent,
+          width: 150,
+          height: 150,
+          colorDark: "#ffffff",
+          colorLight: "#121212",
+          correctLevel: QRCode.CorrectLevel.H
+        });
+      }
+      generateQRCode();
+      document.getElementById('regenerate-qr').addEventListener('click', generateQRCode);
+    </script>
+  </body>
+</html>
