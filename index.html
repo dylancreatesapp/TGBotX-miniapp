@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <title>TGBotX Mini App</title>
-    <!-- Responsive design -->
+    <!-- Ensure responsive design -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- Bootstrap CSS for layout -->
     <link
@@ -23,31 +23,59 @@
     <!-- QRCode.js for QR code generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
-      /* Overall dark theme */
+      /* Overall theme: minimalist black, grey, white */
       body {
-        background-color: #121212;
+        background-color: #000;
         color: #fff;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         margin: 0;
         padding: 0;
       }
-      /* Navigation Tabs */
-      .nav-tabs {
-        border-bottom: 1px solid #333;
-        background: #1e1e1e;
-      }
-      .nav-tabs .nav-link {
-        color: #bbb;
-        border: none;
-        background: transparent;
-        font-size: 1.1rem;
+      /* Header */
+      .app-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         padding: 15px 20px;
-        transition: background 0.3s, color 0.3s;
+        background-color: #111;
+        position: relative;
+        backdrop-filter: blur(4px);
       }
-      .nav-tabs .nav-link.active {
+      .app-header .user-info {
+        font-size: 1.2rem;
+      }
+      /* Hamburger menu icon */
+      .hamburger {
+        font-size: 1.8rem;
+        cursor: pointer;
+      }
+      /* Dropdown menu for hamburger */
+      .dropdown-menu {
+        position: absolute;
+        top: 60px;
+        right: 20px;
+        background-color: #222;
+        border: none;
+        border-radius: 8px;
+        overflow: hidden;
+        backdrop-filter: blur(4px);
+        display: none;
+        width: 200px;
+        z-index: 1000;
+      }
+      .dropdown-menu a {
+        display: block;
+        padding: 12px 15px;
         color: #fff;
-        background-color: #2a2a2a; /* grey texture for selected tab */
-        border-radius: 10px 10px 0 0;
+        text-decoration: none;
+        border-bottom: 1px solid #333;
+        transition: background 0.3s;
+      }
+      .dropdown-menu a:last-child {
+        border-bottom: none;
+      }
+      .dropdown-menu a:hover {
+        background-color: #333;
       }
       /* Main container */
       .container-main {
@@ -56,45 +84,64 @@
         margin: 20px auto;
         padding: 15px;
       }
-      /* Card style for sections */
-      .card-dark {
-        background-color: #1e1e1e;
-        border: none;
-        border-radius: 12px;
+      /* Dashboard Section */
+      .card-dashboard {
+        background-color: #111;
+        border-radius: 10px;
         padding: 20px;
         margin-bottom: 20px;
         backdrop-filter: blur(4px);
       }
-      /* Rounded, modern buttons */
+      .card-dashboard h3 {
+        margin-bottom: 15px;
+        font-size: 1.6rem;
+      }
+      .card-dashboard .balance {
+        font-size: 2rem;
+        font-weight: bold;
+      }
+      .crypto-list {
+        margin-top: 20px;
+      }
+      .crypto-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid #333;
+      }
+      .crypto-item:last-child {
+        border-bottom: none;
+      }
+      /* Sections for Menu Options */
+      .card-section {
+        background-color: #111;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        backdrop-filter: blur(4px);
+        display: none;
+      }
+      .card-section h3 {
+        margin-bottom: 15px;
+        font-size: 1.6rem;
+      }
+      /* OS-standard buttons with blur textures */
       .btn-modern {
         border-radius: 50px;
-        padding: 14px 24px;
+        padding: 12px 24px;
         font-size: 1rem;
-        font-weight: 500;
         border: none;
+        background-color: #333;
+        color: #fff;
         transition: background 0.3s;
+        backdrop-filter: blur(2px);
       }
-      .btn-primary {
-        background-color: #2a2a2a;
-      }
-      .btn-primary:hover {
-        background-color: #3a3a3a;
-      }
-      .btn-success {
-        background-color: #3d9140;
-      }
-      .btn-success:hover {
-        background-color: #4ba74e;
-      }
-      .btn-secondary {
+      .btn-modern:hover {
         background-color: #444;
       }
-      .btn-secondary:hover {
-        background-color: #555;
-      }
-      /* Form inputs */
+      /* Form inputs with crisp white text */
       .form-control {
-        background-color: #2a2a2a;
+        background-color: #222;
         border: 1px solid #444;
         color: #fff;
         border-radius: 50px;
@@ -102,190 +149,179 @@
         font-size: 1rem;
       }
       .form-control:focus {
-        background-color: #2a2a2a;
+        background-color: #222;
         border-color: #666;
         box-shadow: none;
       }
-      /* Chart container */
-      #market-chart-container {
-        position: relative;
-        height: 250px;
-      }
-      /* QR code container */
-      #qrcode {
-        margin-top: 15px;
-        text-align: center;
-      }
-      /* Footer */
-      .footer {
-        text-align: center;
-        color: #888;
-        font-size: 0.9rem;
-        margin: 20px 0;
+      /* Responsive adjustments */
+      @media (max-width: 600px) {
+        .btn-modern {
+          font-size: 1.1rem;
+          padding: 14px 28px;
+        }
       }
     </style>
   </head>
   <body>
-    <!-- Navigation Tabs -->
-    <ul class="nav nav-tabs" id="appTabs">
-      <li class="nav-item">
-        <a class="nav-link active" href="#dashboard" data-tab="dashboard">Dashboard</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#token-wallet" data-tab="token-wallet">Token & Wallet</a>
-      </li>
-    </ul>
-
-    <div class="container-main">
-      <!-- Dashboard Section -->
-      <div id="dashboard" class="tab-section">
-        <div class="card-dark">
-          <h4>Dashboard</h4>
-          <p><strong>Token Balance:</strong> <span id="token-balance">0 tokens</span></p>
-          <p><strong>Recent Activity:</strong> <span id="recent-activity">No activity yet</span></p>
-          <p><strong>Usage Hours:</strong> <span id="usage-hours">0 hrs</span></p>
-        </div>
-        <div class="card-dark">
-          <h4>Market Tracker</h4>
-          <div id="market-chart-container">
-            <canvas id="market-chart"></canvas>
-          </div>
-          <p style="font-size: 0.9rem; color: #ccc; margin-top: 10px;">
-            Token Price | Market Cap | Volume
-          </p>
-        </div>
-      </div>
-
-      <!-- Token & Wallet Section -->
-      <div id="token-wallet" class="tab-section" style="display:none;">
-        <!-- Token Creation -->
-        <div class="card-dark">
-          <h4>Create Your Token</h4>
-          <form id="token-form">
-            <div class="mb-3">
-              <label for="tokenName" class="form-label">Token Name</label>
-              <input
-                type="text"
-                class="form-control"
-                id="tokenName"
-                placeholder="Enter token name"
-                required
-              />
-            </div>
-            <div class="mb-3">
-              <label for="tokenSymbol" class="form-label">Symbol</label>
-              <input
-                type="text"
-                class="form-control"
-                id="tokenSymbol"
-                placeholder="Enter token symbol"
-                required
-              />
-            </div>
-            <div class="mb-3">
-              <label for="tokenSupply" class="form-label">Total Supply</label>
-              <input
-                type="number"
-                class="form-control"
-                id="tokenSupply"
-                placeholder="Enter total supply"
-                required
-              />
-            </div>
-            <button type="submit" class="btn-modern btn-primary">
-              <i class="fas fa-check"></i> Create Token
-            </button>
-          </form>
-          <div id="creation-confirmation" style="margin-top: 15px;"></div>
-        </div>
-
-        <!-- Wallet Management -->
-        <div class="card-dark">
-          <h4>Wallet Management</h4>
-          <!-- Send Tokens -->
-          <form id="send-form">
-            <div class="mb-3">
-              <label for="recipientAddress" class="form-label">Recipient Address</label>
-              <input
-                type="text"
-                class="form-control"
-                id="recipientAddress"
-                placeholder="Enter recipient wallet address"
-                required
-              />
-            </div>
-            <div class="mb-3">
-              <label for="sendAmount" class="form-label">Amount</label>
-              <input
-                type="number"
-                class="form-control"
-                id="sendAmount"
-                placeholder="Enter amount to send"
-                required
-              />
-            </div>
-            <button type="submit" class="btn-modern btn-success">
-              <i class="fas fa-paper-plane"></i> Send Tokens
-            </button>
-          </form>
-          <div id="send-confirmation" style="margin-top: 15px;"></div>
-
-          <!-- Receive Tokens -->
-          <div style="margin-top: 30px;">
-            <h5>Receive Tokens</h5>
-            <p>Your wallet address:</p>
-            <p id="myWalletAddress" style="font-size: 1.1rem;">0xABCDEF123456...</p>
-            <div id="qrcode"></div>
-            <button id="regenerate-qr" class="btn-modern btn-secondary" style="margin-top:15px;">
-              <i class="fas fa-sync-alt"></i> Regenerate QR Code
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Footer -->
-      <div class="footer">
-        &copy; 2025 TGBotX. All rights reserved.
+    <!-- Header with user info and hamburger menu -->
+    <div class="app-header">
+      <div class="user-info" id="user-info">Hello, User</div>
+      <div class="hamburger" id="menuToggle"><i class="fas fa-bars"></i></div>
+      <!-- Dropdown menu -->
+      <div class="dropdown-menu" id="dropdownMenu">
+        <a href="#" data-section="wallet">Wallet Management</a>
+        <a href="#" data-section="token">Token Creation</a>
+        <a href="#" data-section="markets">Markets</a>
+        <a href="#" data-section="trading">Trading Signals (Premium)</a>
       </div>
     </div>
-
+    <!-- Main Container -->
+    <div class="container-main">
+      <!-- Dashboard Section (always visible) -->
+      <div class="card-dashboard" id="dashboard-section">
+        <h3>Dashboard</h3>
+        <p><strong>Balance:</strong> <span class="balance" id="user-balance">0 tokens</span></p>
+        <p><strong>User:</strong> <span id="dashboard-username">User</span></p>
+        <div class="crypto-list">
+          <div class="crypto-item">
+            <span>BTC</span>
+            <span id="price-btc">$0</span>
+          </div>
+          <div class="crypto-item">
+            <span>TRON</span>
+            <span id="price-tron">$0</span>
+          </div>
+          <div class="crypto-item">
+            <span>TON</span>
+            <span id="price-ton">$0</span>
+          </div>
+          <div class="crypto-item">
+            <span>XRP</span>
+            <span id="price-xrp">$0</span>
+          </div>
+          <div class="crypto-item">
+            <span>SUI</span>
+            <span id="price-sui">$0</span>
+          </div>
+          <div class="crypto-item">
+            <span>USDT</span>
+            <span id="price-usdt">$0</span>
+          </div>
+        </div>
+      </div>
+      <!-- Combined Section: Token & Wallet (shown via menu) -->
+      <div class="card-section" id="wallet-section">
+        <h3>Wallet Management</h3>
+        <p>Comprehensive wallet tracking with transaction history and balance updates.</p>
+        <ul id="transaction-history">
+          <li>No transactions yet.</li>
+        </ul>
+      </div>
+      <div class="card-section" id="token-section">
+        <h3>Token Creation</h3>
+        <form id="token-form">
+          <div class="mb-3">
+            <label for="tokenName" class="form-label">Token Name</label>
+            <input type="text" class="form-control" id="tokenName" placeholder="Enter token name" required />
+          </div>
+          <div class="mb-3">
+            <label for="tokenSymbol" class="form-label">Symbol</label>
+            <input type="text" class="form-control" id="tokenSymbol" placeholder="Enter token symbol" required />
+          </div>
+          <div class="mb-3">
+            <label for="tokenSupply" class="form-label">Total Supply</label>
+            <input type="number" class="form-control" id="tokenSupply" placeholder="Enter total supply" required />
+          </div>
+          <button type="submit" class="btn-modern">Create Token</button>
+        </form>
+        <div id="creation-confirmation" style="margin-top: 15px;"></div>
+      </div>
+      <div class="card-section" id="markets-section">
+        <h3>Markets</h3>
+        <p>Real-time market tracking directly from Binance:</p>
+        <div id="market-chart-container">
+          <canvas id="market-chart"></canvas>
+        </div>
+        <p style="font-size: 0.9rem; color: #ccc; margin-top: 10px;">
+          Live prices, market cap, volume, and charts.
+        </p>
+      </div>
+      <div class="card-section" id="trading-section">
+        <h3>Trading Signals (Premium)</h3>
+        <p>Advanced AI-driven trading signals. Unlock exclusively for users holding BOTX tokens.</p>
+      </div>
+    </div>
     <script>
-      // ----- Tab Switching -----
-      document.querySelectorAll('#appTabs a').forEach((tabLink) => {
-        tabLink.addEventListener('click', function (e) {
+      // Toggle dropdown menu
+      const menuToggle = document.getElementById("menuToggle");
+      const dropdownMenu = document.getElementById("dropdownMenu");
+      menuToggle.addEventListener("click", () => {
+        dropdownMenu.style.display = dropdownMenu.style.display === "block" ? "none" : "block";
+      });
+      document.addEventListener("click", function(e) {
+        if (!menuToggle.contains(e.target) && !dropdownMenu.contains(e.target)) {
+          dropdownMenu.style.display = "none";
+        }
+      });
+      // Menu navigation
+      document.querySelectorAll(".dropdown-menu a").forEach(item => {
+        item.addEventListener("click", (e) => {
           e.preventDefault();
-          // Remove active class from all tabs
-          document.querySelectorAll('#appTabs a').forEach((el) => el.classList.remove('active'));
-          // Hide all sections
-          document.querySelectorAll('.tab-section').forEach((section) => section.style.display = 'none');
-          // Activate current tab and show section
-          this.classList.add('active');
-          document.getElementById(this.getAttribute('data-tab')).style.display = 'block';
+          const section = e.target.getAttribute("data-section");
+          // Hide all optional sections
+          document.getElementById("wallet-section").style.display = "none";
+          document.getElementById("token-section").style.display = "none";
+          document.getElementById("markets-section").style.display = "none";
+          document.getElementById("trading-section").style.display = "none";
+          // Show selected section
+          if(section === "wallet") {
+            document.getElementById("wallet-section").style.display = "block";
+          } else if(section === "token") {
+            document.getElementById("token-section").style.display = "block";
+          } else if(section === "markets") {
+            document.getElementById("markets-section").style.display = "block";
+          } else if(section === "trading") {
+            document.getElementById("trading-section").style.display = "block";
+          }
+          dropdownMenu.style.display = "none";
         });
       });
-
       // ----- Telegram WebApp Integration -----
       (function () {
         if (typeof window.Telegram !== "undefined" && window.Telegram.WebApp) {
           const tg = window.Telegram.WebApp;
           tg.expand();
           const initData = tg.initDataUnsafe || {};
-          document.getElementById("user-info").innerText =
-            "Hello " + (initData.user?.first_name || "mysterious user") + "!";
+          const userName = initData.user?.first_name || "mysterious user";
+          document.getElementById("user-info").innerText = "Hello " + userName;
+          document.getElementById("dashboard-username").innerText = userName;
         } else {
           document.getElementById("user-info").innerText = "Hello from outside Telegram!";
         }
       })();
-
-      // ----- Dashboard: Market Tracking Widget (using Chart.js) -----
+      // ----- Dashboard: Update Crypto Prices (Simulated) -----
+      const cryptoData = [
+        { symbol: "BTC", price: "$40,000" },
+        { symbol: "TON", price: "$2,500" },
+        { symbol: "SUI", price: "$1,200" },
+        { symbol: "XRP", price: "$0.90" },
+        { symbol: "TRON", price: "$0.08" },
+        { symbol: "USDT", price: "$1.00" }
+      ];
+      cryptoData.forEach(data => {
+        document.getElementById("price-" + data.symbol.toLowerCase()).innerText = data.price;
+      });
+      // ----- Dashboard: Update User Balance (Simulated) -----
+      document.getElementById("user-balance").innerText = "1500 BOTX";
+      // ----- Markets: Market Chart (Simulated with Chart.js) -----
       const ctx = document.getElementById('market-chart').getContext('2d');
       const marketChart = new Chart(ctx, {
         type: 'line',
         data: {
           labels: ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00'],
           datasets: [{
-            label: 'Token Price',
-            data: [1.0, 1.2, 1.15, 1.3, 1.25, 1.4, 1.35],
+            label: 'BTC Price',
+            data: [40000, 40500, 40300, 41000, 40800, 41200, 41100],
             borderColor: '#4ba74e',
             backgroundColor: 'rgba(75, 167, 78, 0.2)',
             fill: true,
@@ -295,21 +331,12 @@
         options: {
           responsive: true,
           scales: {
-            x: {
-              ticks: { color: '#ccc' },
-              grid: { color: 'rgba(255,255,255,0.1)' }
-            },
-            y: {
-              ticks: { color: '#ccc' },
-              grid: { color: 'rgba(255,255,255,0.1)' }
-            }
+            x: { ticks: { color: '#ccc' }, grid: { color: 'rgba(255,255,255,0.1)' } },
+            y: { ticks: { color: '#ccc' }, grid: { color: 'rgba(255,255,255,0.1)' } }
           },
-          plugins: {
-            legend: { labels: { color: '#ccc' } }
-          }
+          plugins: { legend: { labels: { color: '#ccc' } } }
         }
       });
-
       // ----- Token Creation Section -----
       document.getElementById('token-form').addEventListener('submit', function (e) {
         e.preventDefault();
@@ -318,15 +345,14 @@
         const supply = document.getElementById('tokenSupply').value.trim();
         const confirmation = document.getElementById('creation-confirmation');
         if (name && symbol && supply) {
-          confirmation.innerHTML = `<div style="padding:10px; background:#2a2a2a; border-radius:10px; margin-top:10px;">Token <strong>${name}</strong> (${symbol}) with a total supply of <strong>${supply}</strong> created successfully! (Simulated)</div>`;
+          confirmation.innerHTML = `<div style="padding:10px; background:#2a2a2a; border-radius:10px; margin-top:10px;">Token <strong>${name}</strong> (${symbol}) with total supply <strong>${supply}</strong> created successfully! (Simulated)</div>`;
           this.reset();
         } else {
           confirmation.innerHTML = `<div style="color:#ff7373; margin-top:10px;">Please fill out all fields.</div>`;
         }
       });
-
       // ----- Wallet Management: Send Tokens -----
-      document.getElementById('send-form').addEventListener('submit', function (e) {
+      document.getElementById('send-form')?.addEventListener('submit', function (e) {
         e.preventDefault();
         const recipient = document.getElementById('recipientAddress').value.trim();
         const amount = document.getElementById('sendAmount').value.trim();
@@ -338,7 +364,6 @@
           confirmation.innerHTML = `<div style="color:#ff7373; margin-top:10px;">Please fill out all fields.</div>`;
         }
       });
-
       // ----- Wallet Management: QR Code Generation -----
       function generateQRCode() {
         const qrcodeContainer = document.getElementById('qrcode');
@@ -353,7 +378,7 @@
         });
       }
       generateQRCode();
-      document.getElementById('regenerate-qr').addEventListener('click', generateQRCode);
+      document.getElementById('regenerate-qr')?.addEventListener('click', generateQRCode);
     </script>
   </body>
 </html>
