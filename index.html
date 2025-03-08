@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <title>TGBotX Mini App</title>
-    <!-- Ensure responsive design -->
+    <!-- Responsive design -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- Bootstrap CSS for layout -->
     <link
@@ -18,7 +18,7 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
-    <!-- Chart.js for market tracking widget -->
+    <!-- Chart.js for market widget -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- QRCode.js for QR code generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -27,12 +27,11 @@
       body {
         background-color: #121212;
         color: #fff;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-          Helvetica, Arial, sans-serif;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         margin: 0;
         padding: 0;
       }
-      /* Navigation tabs */
+      /* Navigation Tabs */
       .nav-tabs {
         border-bottom: 1px solid #333;
         background: #1e1e1e;
@@ -41,12 +40,14 @@
         color: #bbb;
         border: none;
         background: transparent;
-        font-size: 1rem;
-        transition: color 0.3s;
+        font-size: 1.1rem;
+        padding: 15px 20px;
+        transition: background 0.3s, color 0.3s;
       }
       .nav-tabs .nav-link.active {
         color: #fff;
-        border-bottom: 2px solid #fff;
+        background-color: #2a2a2a; /* grey texture for selected tab */
+        border-radius: 10px 10px 0 0;
       }
       /* Main container */
       .container-main {
@@ -67,27 +68,26 @@
       /* Rounded, modern buttons */
       .btn-modern {
         border-radius: 50px;
-        padding: 12px 24px;
+        padding: 14px 24px;
         font-size: 1rem;
+        font-weight: 500;
+        border: none;
         transition: background 0.3s;
       }
       .btn-primary {
         background-color: #2a2a2a;
-        border: none;
       }
       .btn-primary:hover {
         background-color: #3a3a3a;
       }
       .btn-success {
         background-color: #3d9140;
-        border: none;
       }
       .btn-success:hover {
         background-color: #4ba74e;
       }
       .btn-secondary {
         background-color: #444;
-        border: none;
       }
       .btn-secondary:hover {
         background-color: #555;
@@ -103,7 +103,6 @@
       }
       .form-control:focus {
         background-color: #2a2a2a;
-        color: #fff;
         border-color: #666;
         box-shadow: none;
       }
@@ -117,12 +116,12 @@
         margin-top: 15px;
         text-align: center;
       }
-      /* Responsive adjustments */
-      @media (max-width: 600px) {
-        .btn-modern {
-          font-size: 1.1rem;
-          padding: 14px 28px;
-        }
+      /* Footer */
+      .footer {
+        text-align: center;
+        color: #888;
+        font-size: 0.9rem;
+        margin: 20px 0;
       }
     </style>
   </head>
@@ -130,17 +129,10 @@
     <!-- Navigation Tabs -->
     <ul class="nav nav-tabs" id="appTabs">
       <li class="nav-item">
-        <a class="nav-link active" href="#dashboard" data-tab="dashboard"
-          >Dashboard</a
-        >
+        <a class="nav-link active" href="#dashboard" data-tab="dashboard">Dashboard</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#create-token" data-tab="create-token"
-          >Token Creation</a
-        >
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#wallet" data-tab="wallet">Wallet Management</a>
+        <a class="nav-link" href="#token-wallet" data-tab="token-wallet">Token & Wallet</a>
       </li>
     </ul>
 
@@ -164,8 +156,9 @@
         </div>
       </div>
 
-      <!-- Token Creation Section -->
-      <div id="create-token" class="tab-section" style="display:none;">
+      <!-- Token & Wallet Section -->
+      <div id="token-wallet" class="tab-section" style="display:none;">
+        <!-- Token Creation -->
         <div class="card-dark">
           <h4>Create Your Token</h4>
           <form id="token-form">
@@ -199,18 +192,17 @@
                 required
               />
             </div>
-            <button type="submit" class="btn btn-modern btn-primary">
+            <button type="submit" class="btn-modern btn-primary">
               <i class="fas fa-check"></i> Create Token
             </button>
           </form>
           <div id="creation-confirmation" style="margin-top: 15px;"></div>
         </div>
-      </div>
 
-      <!-- Wallet Management Section -->
-      <div id="wallet" class="tab-section" style="display:none;">
+        <!-- Wallet Management -->
         <div class="card-dark">
-          <h4>Send Tokens</h4>
+          <h4>Wallet Management</h4>
+          <!-- Send Tokens -->
           <form id="send-form">
             <div class="mb-3">
               <label for="recipientAddress" class="form-label">Recipient Address</label>
@@ -232,22 +224,28 @@
                 required
               />
             </div>
-            <button type="submit" class="btn btn-modern btn-success">
+            <button type="submit" class="btn-modern btn-success">
               <i class="fas fa-paper-plane"></i> Send Tokens
             </button>
           </form>
           <div id="send-confirmation" style="margin-top: 15px;"></div>
-        </div>
 
-        <div class="card-dark">
-          <h4>Receive Tokens</h4>
-          <p>Your wallet address:</p>
-          <p id="myWalletAddress" style="font-size: 1.1rem;">0xABCDEF123456...</p>
-          <div id="qrcode"></div>
-          <button id="regenerate-qr" class="btn btn-modern btn-secondary" style="margin-top:15px;">
-            <i class="fas fa-sync-alt"></i> Regenerate QR Code
-          </button>
+          <!-- Receive Tokens -->
+          <div style="margin-top: 30px;">
+            <h5>Receive Tokens</h5>
+            <p>Your wallet address:</p>
+            <p id="myWalletAddress" style="font-size: 1.1rem;">0xABCDEF123456...</p>
+            <div id="qrcode"></div>
+            <button id="regenerate-qr" class="btn-modern btn-secondary" style="margin-top:15px;">
+              <i class="fas fa-sync-alt"></i> Regenerate QR Code
+            </button>
+          </div>
         </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer">
+        &copy; 2025 TGBotX. All rights reserved.
       </div>
     </div>
 
@@ -272,17 +270,15 @@
           const tg = window.Telegram.WebApp;
           tg.expand();
           const initData = tg.initDataUnsafe || {};
-          // Replace the header user info if available
-          document.getElementById("app-header")?.remove(); // Remove any previous header if exists
-          const userInfoElem = document.getElementById("user-info");
-          userInfoElem.innerText =
+          document.getElementById("user-info").innerText =
             "Hello " + (initData.user?.first_name || "mysterious user") + "!";
+        } else {
+          document.getElementById("user-info").innerText = "Hello from outside Telegram!";
         }
       })();
 
       // ----- Dashboard: Market Tracking Widget (using Chart.js) -----
       const ctx = document.getElementById('market-chart').getContext('2d');
-      // Dummy data for the chart
       const marketChart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -322,7 +318,7 @@
         const supply = document.getElementById('tokenSupply').value.trim();
         const confirmation = document.getElementById('creation-confirmation');
         if (name && symbol && supply) {
-          confirmation.innerHTML = `<div style="padding:10px; background:#2a2a2a; border-radius:10px; margin-top:10px;">Token <strong>${name}</strong> (${symbol}) with supply <strong>${supply}</strong> created successfully! (Simulated)</div>`;
+          confirmation.innerHTML = `<div style="padding:10px; background:#2a2a2a; border-radius:10px; margin-top:10px;">Token <strong>${name}</strong> (${symbol}) with a total supply of <strong>${supply}</strong> created successfully! (Simulated)</div>`;
           this.reset();
         } else {
           confirmation.innerHTML = `<div style="color:#ff7373; margin-top:10px;">Please fill out all fields.</div>`;
@@ -343,11 +339,10 @@
         }
       });
 
-      // ----- Wallet Management: QR Code Generation for Receiving Tokens -----
+      // ----- Wallet Management: QR Code Generation -----
       function generateQRCode() {
         const qrcodeContainer = document.getElementById('qrcode');
         qrcodeContainer.innerHTML = "";
-        // Using a dummy wallet address; replace with the actual address as needed
         new QRCode(qrcodeContainer, {
           text: document.getElementById('myWalletAddress').textContent,
           width: 150,
