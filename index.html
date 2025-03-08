@@ -336,17 +336,8 @@
         }
       })();
       // ----- Dashboard: Update Crypto Prices (Simulated) -----
-      const cryptoData = [
-        { symbol: "BTC", price: "$40,000" },
-        { symbol: "TON", price: "$2,500" },
-        { symbol: "SUI", price: "$1,200" },
-        { symbol: "XRP", price: "$0.90" },
-        { symbol: "TRON", price: "$0.08" },
-        { symbol: "USDT", price: "$1.00" }
-      ];
-      cryptoData.forEach(data => {
-        document.getElementById("price-" + data.symbol.toLowerCase()).innerText = data.price;
-      });
+      https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT
+
       // ----- Dashboard: Update User Balance (Simulated) -----
       document.getElementById("user-balance").innerText = "1500 BOTX";
       // ----- Markets: Market Chart (Simulated with Chart.js) -----
