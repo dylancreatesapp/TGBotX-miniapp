@@ -2,7 +2,9 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>TGBotX Mini-App (Dark UI)</title>
+    <title>TGBotX Mini-App (Larger UI)</title>
+    <!-- Ensure proper mobile scaling -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- Bootstrap for layout & responsiveness -->
     <link
       rel="stylesheet"
@@ -24,6 +26,7 @@
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
         margin: 0;
         padding: 0;
+        font-size: 1.1rem; /* Increase base font size */
       }
       /* Header area */
       .app-header {
@@ -32,18 +35,18 @@
         text-align: center;
       }
       .app-header h1 {
-        font-size: 1.4rem;
+        font-size: 1.6rem; /* Larger title text */
         margin: 0;
       }
       .app-header p {
         margin: 5px 0 0 0;
-        font-size: 0.9rem;
+        font-size: 1rem;
         color: #ccc;
       }
       /* Main container */
       .main-container {
         margin: 0 auto;
-        max-width: 500px;
+        width: 95%;         /* Use most of the screen width on mobile */
         padding: 20px;
       }
       /* Card styling */
@@ -55,16 +58,19 @@
       }
       .dark-card h4 {
         margin-bottom: 15px;
+        font-size: 1.3rem;
       }
       .dark-card label {
         color: #ccc;
+        font-size: 1rem;
       }
-      /* Rounded buttons */
+      /* Larger, rounded buttons */
       .btn-rounded {
         border-radius: 50px;
         border: none;
-        padding: 10px 20px;
+        padding: 14px 24px;    /* Increased padding for easier tapping */
         font-weight: 500;
+        font-size: 1rem;       /* Larger button text */
         transition: background 0.3s;
       }
       .btn-rounded i {
@@ -98,6 +104,8 @@
         border: 1px solid #444;
         color: #fff;
         border-radius: 50px;
+        font-size: 1rem;
+        padding: 14px 16px; /* Larger input for easier tapping */
       }
       .form-control:focus {
         background-color: #2a2a2a;
@@ -110,18 +118,20 @@
       #error-message {
         color: #ff7373;
         margin-top: 10px;
+        font-size: 1rem;
       }
       #result {
         background: #2a2a2a;
         border-radius: 10px;
         padding: 10px;
         margin-top: 10px;
+        font-size: 1rem;
       }
       /* Footer (optional) */
       .footer {
         text-align: center;
         color: #888;
-        font-size: 0.8rem;
+        font-size: 0.9rem;
         margin: 20px 0;
       }
     </style>
@@ -170,71 +180,4 @@
       </div>
 
       <!-- Optional Footer -->
-      <div class="footer">
-        &copy; 2025 TGBotX. All rights reserved.
-      </div>
-    </div>
-
-    <script>
-      (function () {
-        // 1) Telegram detection
-        let tg;
-        if (typeof window.Telegram !== "undefined" && window.Telegram.WebApp) {
-          tg = window.Telegram.WebApp;
-          tg.expand();
-          const initDataUnsafe = tg.initDataUnsafe || {};
-          document.getElementById("user-info").innerText =
-            "Hello " + (initDataUnsafe.user?.first_name || "mysterious user") + "!";
-        } else {
-          document.getElementById("user-info").innerText =
-            "Hello from outside Telegram!";
-        }
-
-        // 2) "Check My Token Balance" button
-        const checkTokenBtn = document.getElementById("check-token");
-        const balanceInfo = document.getElementById("balance-info");
-        checkTokenBtn.addEventListener("click", () => {
-          // Simulate a token balance check
-          balanceInfo.textContent = "You currently hold 100 tokens.";
-        });
-
-        // 3) Clear button
-        const clearBtn = document.getElementById("clear-result");
-        clearBtn.addEventListener("click", () => {
-          balanceInfo.textContent = "0 tokens";
-          document.getElementById("error-message").textContent = "";
-          document.getElementById("result").style.display = "none";
-          document.getElementById("result").textContent = "";
-        });
-
-        // 4) "Check Balance" for wallet address
-        const checkWalletBtn = document.getElementById("check-wallet");
-        checkWalletBtn.addEventListener("click", () => {
-          const walletAddress = document
-            .getElementById("walletAddress")
-            .value.trim();
-          const errorMessage = document.getElementById("error-message");
-          const result = document.getElementById("result");
-
-          // Clear old messages
-          errorMessage.textContent = "";
-          result.style.display = "none";
-          result.textContent = "";
-
-          // Validate input
-          if (!walletAddress) {
-            errorMessage.textContent = "Please enter a valid wallet address.";
-            return;
-          }
-
-          // Simulate checking balance
-          result.style.display = "block";
-          result.textContent = "Checking balance...";
-          setTimeout(() => {
-            result.textContent = `Wallet ${walletAddress} has 500 tokens (simulated).`;
-          }, 1000);
-        });
-      })();
-    </script>
-  </body>
-</html>
+      <div class="foo
