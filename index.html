@@ -38,8 +38,9 @@
         align-items: center;
         padding: 15px 20px;
         background-color: #111;
-        position: relative;
+        position: relative; /* So the dropdown menu is placed relative to this container */
         backdrop-filter: blur(4px);
+        z-index: 100; /* Ensure the header is above main container */
       }
       .app-header .user-info {
         font-size: 1.2rem;
@@ -62,7 +63,7 @@
         backdrop-filter: blur(4px);
         display: none;
         width: 200px;
-        z-index: 1000;
+        z-index: 9999; /* Higher z-index so it appears above the dashboard */
       }
       .dropdown-menu a {
         display: block;
@@ -85,7 +86,7 @@
         margin: 20px auto;
         padding: 15px;
       }
-      /* Dashboard Section */
+      /* Dashboard Section (always visible) */
       .card-dashboard {
         background-color: #111;
         border-radius: 10px;
@@ -154,6 +155,13 @@
         border-color: #666;
         box-shadow: none;
       }
+      /* Footer */
+      .footer {
+        text-align: center;
+        color: #888;
+        font-size: 0.9rem;
+        margin: 20px 0;
+      }
       /* Responsive adjustments */
       @media (max-width: 600px) {
         .btn-modern {
@@ -181,7 +189,10 @@
       <!-- Dashboard Section (always visible) -->
       <div class="card-dashboard" id="dashboard-section">
         <h3>Dashboard</h3>
-        <p><strong>Balance:</strong> <span class="balance" id="user-balance">0 tokens</span></p>
+        <p>
+          <strong>Balance:</strong>
+          <span class="balance" id="user-balance">0 tokens</span>
+        </p>
         <p><strong>User:</strong> <span id="dashboard-username">User</span></p>
         <div class="crypto-list">
           <div class="crypto-item">
@@ -223,15 +234,33 @@
         <form id="token-form">
           <div class="mb-3">
             <label for="tokenName" class="form-label">Token Name</label>
-            <input type="text" class="form-control" id="tokenName" placeholder="Enter token name" required />
+            <input
+              type="text"
+              class="form-control"
+              id="tokenName"
+              placeholder="Enter token name"
+              required
+            />
           </div>
           <div class="mb-3">
             <label for="tokenSymbol" class="form-label">Symbol</label>
-            <input type="text" class="form-control" id="tokenSymbol" placeholder="Enter token symbol" required />
+            <input
+              type="text"
+              class="form-control"
+              id="tokenSymbol"
+              placeholder="Enter token symbol"
+              required
+            />
           </div>
           <div class="mb-3">
             <label for="tokenSupply" class="form-label">Total Supply</label>
-            <input type="number" class="form-control" id="tokenSupply" placeholder="Enter total supply" required />
+            <input
+              type="number"
+              class="form-control"
+              id="tokenSupply"
+              placeholder="Enter total supply"
+              required
+            />
           </div>
           <button type="submit" class="btn-modern btn-primary">
             <i class="fas fa-check"></i> Create Token
@@ -376,7 +405,7 @@
         const qrcodeContainer = document.getElementById('qrcode');
         qrcodeContainer.innerHTML = "";
         new QRCode(qrcodeContainer, {
-          text: document.getElementById('myWalletAddress').textContent,
+          text: document.getElementById('myWalletAddress')?.textContent || '0x000000',
           width: 150,
           height: 150,
           colorDark: "#ffffff",
