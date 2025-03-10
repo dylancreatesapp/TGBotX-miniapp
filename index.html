@@ -40,12 +40,11 @@
         background-color: #111;
         position: relative;
         backdrop-filter: blur(4px);
-        z-index: 100; /* Ensures the header is above the main container */
+        z-index: 100;
       }
       .app-header .user-info {
         font-size: 1.2rem;
       }
-      /* Hamburger menu icon using Unicode */
       .hamburger {
         font-size: 1.8rem;
         cursor: pointer;
@@ -63,7 +62,7 @@
         backdrop-filter: blur(4px);
         display: none;
         width: 200px;
-        z-index: 9999; /* Higher z-index so it appears above the dashboard */
+        z-index: 9999;
       }
       .dropdown-menu a {
         display: block;
@@ -86,7 +85,7 @@
         margin: 20px auto;
         padding: 15px;
       }
-      /* Dashboard Section (always visible) */
+      /* Dashboard Section */
       .card-dashboard {
         background-color: #111;
         border-radius: 10px;
@@ -127,7 +126,7 @@
         margin-bottom: 15px;
         font-size: 1.6rem;
       }
-      /* OS-standard buttons with subtle blur textures */
+      /* Modern buttons */
       .btn-modern {
         border-radius: 50px;
         padding: 12px 24px;
@@ -141,7 +140,6 @@
       .btn-modern:hover {
         background-color: #444;
       }
-      /* Form inputs with crisp white text */
       .form-control {
         background-color: #222;
         border: 1px solid #444;
@@ -155,14 +153,12 @@
         border-color: #666;
         box-shadow: none;
       }
-      /* Footer */
       .footer {
         text-align: center;
         color: #888;
         font-size: 0.9rem;
         margin: 20px 0;
       }
-      /* Responsive adjustments */
       @media (max-width: 600px) {
         .btn-modern {
           font-size: 1.1rem;
@@ -172,11 +168,10 @@
     </style>
   </head>
   <body>
-    <!-- Header with user info and hamburger menu -->
+    <!-- Header -->
     <div class="app-header">
       <div class="user-info" id="user-info">Hello, User</div>
       <div class="hamburger" id="menuToggle">&#9776;</div>
-      <!-- Dropdown menu -->
       <div class="dropdown-menu" id="dropdownMenu">
         <a href="#" data-section="wallet">Wallet Management</a>
         <a href="#" data-section="token">Token Creation</a>
@@ -187,108 +182,63 @@
 
     <!-- Main Container -->
     <div class="container-main">
-      <!-- Dashboard Section (always visible) -->
+      <!-- Dashboard Section -->
       <div class="card-dashboard" id="dashboard-section">
         <h3>Dashboard</h3>
-        <p>
-          <strong>Balance:</strong>
-          <span class="balance" id="user-balance">0 tokens</span>
-        </p>
+        <p><strong>Balance:</strong> <span class="balance" id="user-balance">0 tokens</span></p>
         <p><strong>User:</strong> <span id="dashboard-username">User</span></p>
         <div class="crypto-list">
-          <div class="crypto-item">
-            <span>BTC</span>
-            <span id="price-btc">$0</span>
-          </div>
-          <div class="crypto-item">
-            <span>TRON</span>
-            <span id="price-tron">$0</span>
-          </div>
-          <div class="crypto-item">
-            <span>TON</span>
-            <span id="price-ton">$0</span>
-          </div>
-          <div class="crypto-item">
-            <span>XRP</span>
-            <span id="price-xrp">$0</span>
-          </div>
-          <div class="crypto-item">
-            <span>SUI</span>
-            <span id="price-sui">$0</span>
-          </div>
-          <div class="crypto-item">
-            <span>USDT</span>
-            <span id="price-usdt">$0</span>
-          </div>
+          <div class="crypto-item"><span>BTC</span><span id="price-btc">$0</span></div>
+          <div class="crypto-item"><span>TRON</span><span id="price-tron">$0</span></div>
+          <div class="crypto-item"><span>TON</span><span id="price-ton">$0</span></div>
+          <div class="crypto-item"><span>XRP</span><span id="price-xrp">$0</span></div>
+          <div class="crypto-item"><span>SUI</span><span id="price-sui">$0</span></div>
+          <div class="crypto-item"><span>USDT</span><span id="price-usdt">$0</span></div>
         </div>
       </div>
 
-      <!-- Combined Section: Token & Wallet -->
+      <!-- Wallet Management Section -->
       <div class="card-section" id="wallet-section">
         <h3>Wallet Management</h3>
         <p>Comprehensive wallet tracking with transaction history and balance updates.</p>
-        <ul id="transaction-history">
-          <li>No transactions yet.</li>
-        </ul>
+        <ul id="transaction-history"><li>No transactions yet.</li></ul>
       </div>
 
+      <!-- Token Creation Section -->
       <div class="card-section" id="token-section">
         <h3>Token Creation</h3>
         <form id="token-form">
           <div class="mb-3">
             <label for="tokenName" class="form-label">Token Name</label>
-            <input
-              type="text"
-              class="form-control"
-              id="tokenName"
-              placeholder="Enter token name"
-              required
-            />
+            <input type="text" class="form-control" id="tokenName" placeholder="Enter token name" required />
           </div>
           <div class="mb-3">
             <label for="tokenSymbol" class="form-label">Symbol</label>
-            <input
-              type="text"
-              class="form-control"
-              id="tokenSymbol"
-              placeholder="Enter token symbol"
-              required
-            />
+            <input type="text" class="form-control" id="tokenSymbol" placeholder="Enter token symbol" required />
           </div>
           <div class="mb-3">
             <label for="tokenSupply" class="form-label">Total Supply</label>
-            <input
-              type="number"
-              class="form-control"
-              id="tokenSupply"
-              placeholder="Enter total supply"
-              required
-            />
+            <input type="number" class="form-control" id="tokenSupply" placeholder="Enter total supply" required />
           </div>
-          <button type="submit" class="btn-modern btn-primary">
-            <i class="fas fa-check"></i> Create Token
-          </button>
+          <button type="submit" class="btn-modern btn-primary"><i class="fas fa-check"></i> Create Token</button>
         </form>
         <div id="creation-confirmation" style="margin-top: 15px;"></div>
       </div>
 
+      <!-- Markets Section -->
       <div class="card-section" id="markets-section">
         <h3>Markets</h3>
         <p>Real-time market tracking from Binance:</p>
         <div id="market-chart-container">
           <canvas id="market-chart"></canvas>
         </div>
-        <p style="font-size: 0.9rem; color: #ccc; margin-top: 10px;">
-          Live prices, market cap, volume, and charts.
-        </p>
+        <p style="font-size: 0.9rem; color: #ccc; margin-top: 10px;">Live prices, market cap, volume, and charts.</p>
       </div>
 
-      <!-- Updated Trading Signals (Premium) Section -->
+      <!-- Trading Signals (Premium) Section -->
       <div class="card-section" id="trading-section">
         <h3>Trading Signals (Premium)</h3>
-        <p>
-          Advanced AI-driven trading signals. Unlock exclusively for users holding TGBTX tokens.
-        </p>
+        <p>Advanced AI-driven trading signals. Unlock exclusively for users holding TGBTX tokens.</p>
         <form id="trading-form">
           <div class="mb-3">
             <label for="signalPair" class="form-label">Select Trading Pair</label>
@@ -300,21 +250,17 @@
               <option value="SUIUSDT">SUIUSDT</option>
             </select>
           </div>
-          <button type="submit" class="btn-modern btn-primary">
-            <i class="fas fa-robot"></i> Get Trading Signal
-          </button>
+          <button type="submit" class="btn-modern btn-primary"><i class="fas fa-robot"></i> Get Trading Signal</button>
         </form>
         <div id="trading-result" style="margin-top:15px;"></div>
       </div>
 
       <!-- Footer -->
-      <div class="footer">
-        &copy; 2025 TGBotX. All rights reserved.
-      </div>
+      <div class="footer">&copy; 2025 TGBotX. All rights reserved.</div>
     </div>
 
     <script>
-      // ----- Hamburger Menu Toggle -----
+      // Hamburger Menu Toggle
       const menuToggle = document.getElementById("menuToggle");
       const dropdownMenu = document.getElementById("dropdownMenu");
       menuToggle.addEventListener("click", () => {
@@ -325,18 +271,15 @@
           dropdownMenu.style.display = "none";
         }
       });
-
-      // ----- Menu Navigation -----
+      // Menu Navigation
       document.querySelectorAll(".dropdown-menu a").forEach((item) => {
         item.addEventListener("click", (e) => {
           e.preventDefault();
           const section = e.target.getAttribute("data-section");
-          // Hide all optional sections
           document.getElementById("wallet-section").style.display = "none";
           document.getElementById("token-section").style.display = "none";
           document.getElementById("markets-section").style.display = "none";
           document.getElementById("trading-section").style.display = "none";
-          // Show selected section
           if (section === "wallet") {
             document.getElementById("wallet-section").style.display = "block";
           } else if (section === "token") {
@@ -349,8 +292,7 @@
           dropdownMenu.style.display = "none";
         });
       });
-
-      // ----- Telegram WebApp Integration -----
+      // Telegram WebApp Integration
       (function () {
         if (typeof window.Telegram !== "undefined" && window.Telegram.WebApp) {
           const tg = window.Telegram.WebApp;
@@ -363,8 +305,7 @@
           document.getElementById("user-info").innerText = "Hello from outside Telegram!";
         }
       })();
-
-      // ----- Binance Live Price Fetch -----
+      // Binance Live Price Fetch
       const binanceSymbols = [
         { id: "btc", pair: "BTCUSDT" },
         { id: "tron", pair: "TRXUSDT" },
@@ -372,13 +313,10 @@
         { id: "xrp", pair: "XRPUSDT" },
         { id: "sui", pair: "SUIUSDT" }
       ];
-
       async function fetchBinancePrices() {
         for (let coin of binanceSymbols) {
           try {
-            const response = await fetch(
-              `https://api.binance.com/api/v3/ticker/price?symbol=${coin.pair}`
-            );
+            const response = await fetch(`https://api.binance.com/api/v3/ticker/price?symbol=${coin.pair}`);
             const data = await response.json();
             const priceNum = parseFloat(data.price).toFixed(4);
             document.getElementById(`price-${coin.id}`).innerText = `$${priceNum}`;
@@ -386,46 +324,37 @@
             console.error(`Error fetching ${coin.pair} price:`, err);
           }
         }
-        // Hard-code USDT to $1.00
         document.getElementById("price-usdt").innerText = "$1.00";
       }
-
-      // Fetch prices on page load
       fetchBinancePrices();
-      // Refresh every 60 seconds
       setInterval(fetchBinancePrices, 60000);
-
-      // ----- Dashboard: Update User Balance (Simulated) -----
+      // Simulated Dashboard: User Balance
       document.getElementById("user-balance").innerText = "1500 BOTX";
-
-      // ----- Markets: Market Chart (Simulated with Chart.js) -----
+      // Markets: Simulated Market Chart using Chart.js
       const ctx = document.getElementById("market-chart").getContext("2d");
       const marketChart = new Chart(ctx, {
         type: "line",
         data: {
           labels: ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00"],
-          datasets: [
-            {
-              label: "BTC Price",
-              data: [40000, 40500, 40300, 41000, 40800, 41200, 41100],
-              borderColor: "#4ba74e",
-              backgroundColor: "rgba(75, 167, 78, 0.2)",
-              fill: true,
-              tension: 0.3,
-            },
-          ],
+          datasets: [{
+            label: "BTC Price",
+            data: [40000, 40500, 40300, 41000, 40800, 41200, 41100],
+            borderColor: "#4ba74e",
+            backgroundColor: "rgba(75, 167, 78, 0.2)",
+            fill: true,
+            tension: 0.3
+          }]
         },
         options: {
           responsive: true,
           scales: {
             x: { ticks: { color: "#ccc" }, grid: { color: "rgba(255,255,255,0.1)" } },
-            y: { ticks: { color: "#ccc" }, grid: { color: "rgba(255,255,255,0.1)" } },
+            y: { ticks: { color: "#ccc" }, grid: { color: "rgba(255,255,255,0.1)" } }
           },
-          plugins: { legend: { labels: { color: "#ccc" } } },
-        },
+          plugins: { legend: { labels: { color: "#ccc" } } }
+        }
       });
-
-      // ----- Token Creation Section -----
+      // Token Creation Section
       document.getElementById("token-form").addEventListener("submit", function (e) {
         e.preventDefault();
         const name = document.getElementById("tokenName").value.trim();
@@ -439,34 +368,42 @@
           confirmation.innerHTML = `<div style="color:#ff7373; margin-top:10px;">Please fill out all fields.</div>`;
         }
       });
-
-      // ----- Trading Signals (Premium) Section -----
+      // Trading Signals Section: Real API call to Railway endpoint
       document.getElementById("trading-form").addEventListener("submit", async function (e) {
         e.preventDefault();
         const pair = document.getElementById("signalPair").value;
         const resultDiv = document.getElementById("trading-result");
         resultDiv.innerHTML = "Fetching trading signal...";
-        // Simulate API call delay (replace with real GPT API integration in production)
-        setTimeout(() => {
-          // Simulated signal data – in production, these values would be generated by your AI (e.g., GPT API)
-          const signal = {
-            pair: pair,
-            entryUTC: new Date().toUTCString(),
-            binanceTime: new Date().toUTCString(),
-            stopLoss: (Math.random() * 1000 + 28000).toFixed(2), // dummy value
-            takeProfit: (Math.random() * 1000 + 30000).toFixed(2), // dummy value
-          };
+        try {
+          const response = await fetch("https://tgbotx-miniapp-production.up.railway.app/api/trading-signal", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ pair: pair })
+          });
+          const data = await response.json();
+          if (data.error) {
+            resultDiv.innerHTML = `<div style="color:#ff7373;">Error: ${data.error}</div>`;
+            return;
+          }
           resultDiv.innerHTML = `<div style="padding:10px; background:#2a2a2a; border-radius:10px;">
-            <p><strong>Trading Signal for ${signal.pair}</strong></p>
-            <p>Entry Time (UTC): ${signal.entryUTC}</p>
-            <p>Binance Interaction Time: ${signal.binanceTime}</p>
-            <p>Stop Loss: ${signal.stopLoss}</p>
-            <p>Take Profit: ${signal.takeProfit}</p>
+            <p><strong>Trading Signal for ${data.pair}</strong></p>
+            <p>Binance Price: ${data.binancePrice}</p>
+            <p>Gemini Price: ${data.geminiPrice}</p>
+            <p>Average Price: ${data.averagePrice}</p>
+            <p>Current SMA: ${data.currentSMA || "N/A"}</p>
+            <p>Diff %: ${data.diffPercent}</p>
+            <p>Entry: ${data.signal.entry}</p>
+            <p>Stop Loss: ${data.signal.stopLoss}</p>
+            <p>Take Profit: ${data.signal.takeProfit}</p>
+            <p>Rationale: ${data.signal.rationale}</p>
+            <p>UTC Time: ${data.utcTime}</p>
           </div>`;
-        }, 2000);
+        } catch (err) {
+          console.error("Fetch error:", err);
+          resultDiv.innerHTML = `<div style="color:#ff7373;">Failed to fetch signal. Check console for details.</div>`;
+        }
       });
-
-      // ----- Wallet Management: Send Tokens (Optional) -----
+      // Wallet Management Section: Simulated send tokens
       document.getElementById("send-form")?.addEventListener("submit", function (e) {
         e.preventDefault();
         const recipient = document.getElementById("recipientAddress").value.trim();
@@ -479,8 +416,7 @@
           confirmation.innerHTML = `<div style="color:#ff7373; margin-top:10px;">Please fill out all fields.</div>`;
         }
       });
-
-      // ----- Wallet Management: QR Code Generation (Optional) -----
+      // QR Code Generation Section (Optional)
       function generateQRCode() {
         const qrcodeContainer = document.getElementById("qrcode");
         if (!qrcodeContainer) return;
