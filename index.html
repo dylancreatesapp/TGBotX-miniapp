@@ -10,11 +10,10 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
     />
-    <!-- Font Awesome for icons -->
+    <!-- Font Awesome for icons (integrity removed) -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-      integrity="sha512-AZl+nX6I6SG8AHcZ5vuT1PO81jjcBM2cYPZPa60nGfpEpAxN1TvzGj6S3LD6Ug+whZzJ3RNaX6h+u8JEPz9K9Q=="
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
@@ -50,7 +49,7 @@
         cursor: pointer;
         user-select: none;
       }
-      /* Dropdown menu for hamburger */
+      /* Dropdown menu */
       .dropdown-menu {
         position: absolute;
         top: 60px;
@@ -113,7 +112,7 @@
       .crypto-item:last-child {
         border-bottom: none;
       }
-      /* Sections for Menu Options */
+      /* Menu Sections */
       .card-section {
         background-color: #111;
         border-radius: 10px;
@@ -126,7 +125,7 @@
         margin-bottom: 15px;
         font-size: 1.6rem;
       }
-      /* Modern buttons */
+      /* Modern Buttons */
       .btn-modern {
         border-radius: 50px;
         padding: 12px 24px;
@@ -328,7 +327,7 @@
       }
       fetchBinancePrices();
       setInterval(fetchBinancePrices, 60000);
-      // Simulated Dashboard: User Balance
+      // Dashboard: Simulated User Balance
       document.getElementById("user-balance").innerText = "1500 BOTX";
       // Markets: Simulated Market Chart using Chart.js
       const ctx = document.getElementById("market-chart").getContext("2d");
@@ -368,14 +367,14 @@
           confirmation.innerHTML = `<div style="color:#ff7373; margin-top:10px;">Please fill out all fields.</div>`;
         }
       });
-      // Trading Signals Section: Real API call to Railway endpoint
+      // Trading Signals Section: Real API call to backend
       document.getElementById("trading-form").addEventListener("submit", async function (e) {
         e.preventDefault();
         const pair = document.getElementById("signalPair").value;
         const resultDiv = document.getElementById("trading-result");
         resultDiv.innerHTML = "Fetching trading signal...";
         try {
-          const response = await fetch("https://tgbotx-miniapp-production.up.railway.app/api/trading-signal", {
+          const response = await fetch("https://tgbotx-miniapp-backend-production.up.railway.app/api/trading-signal", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ pair: pair })
