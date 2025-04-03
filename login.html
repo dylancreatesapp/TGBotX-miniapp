@@ -8,17 +8,32 @@
       font-family: sans-serif;
       background: #111;
       color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
       margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
     .login-container {
       background: #222;
       padding: 20px;
       border-radius: 8px;
       text-align: center;
+      width: 90%;
+      max-width: 400px;
+    }
+    .btn {
+      background-color: #444;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 10px 0;
+    }
+    .btn:hover {
+      background-color: #555;
     }
   </style>
 </head>
@@ -26,5 +41,91 @@
   <div class="login-container">
     <h1>Welcome to TGBotX Mini-App</h1>
     <p>Please log in with your Telegram account to continue.</p>
-    <!-- Telegram Login Widget -->
-    <script async src="https://telegram.org/js/telegram-widget.js
+    <div id="loginArea"></div>
+  </div>
+
+  <script>
+    /*
+      1. If we are inside Telegram’s WebApp environment, we can read the user info directly 
+         from Telegram.WebApp.initDataUnsafe, no extra button needed.
+      2. If not inside Telegram (e.g., user opened this link in a browser), we show the 
+         Telegram Login Widget, which has a "Log in with Telegram" button.
+      3. After successful login, we can optionally allow "Connect Wallet" if you want 
+         the user to link a crypto wallet in the same flow.
+    */
+
+    // Step A: Check if inside Telegram WebApp
+    if (typeof Telegram !== "undefined" && Telegram.WebApp) {
+      const tg = Telegram.WebApp;
+      tg.expand();  // Expand the mini-app to full screen
+
+      const user = tg.initDataUnsafe?.user;
+      if (user) {
+        // We have Telegram user data automatically. No button needed.
+        // You can store it on your server or just redirect to your main miniapp.
+        storeUserAndRedirect(user);
+      } else {
+        // No user data found — fallback to widget
+        showTelegramWidget();
+      }
+    } else {
+      // Not inside Telegram environment
+      showTelegramWidget();
+    }
+
+    // Step B: Function to display Telegram Login Widget
+    function showTelegramWidget() {
+      document.getElementById("loginArea").innerHTML = `
+        <script async src="https://telegram.org/js/telegram-widget.js?15"
+                data-telegram-login="TGBotXutility_bot"
+                data-size="large"
+                data-userpic="false"
+                data-request-access="write"
+                data-onauth="onTelegramAuth(user)">
+        </script>
+        <div style="margin-top: 20px;">
+          <button class="btn" onclick="connectWallet()">Connect Wallet</button>
+        </div>
+      `;
+    }
+
+    // Step C: This function is called automatically by the Telegram Login Widget 
+    //         when user logs in from outside the Telegram app
+    function onTelegramAuth(user) {
+      storeUserAndRedirect(user);
+    }
+
+    // Step D: Example function that sends the user’s Telegram data to your backend
+    //         Then redirects them to your main mini-app (index.html)
+    function storeUserAndRedirect(user) {
+      // user has { id, first_name, last_name, username, photo_url, auth_date, hash }
+      fetch("https://tgbotx-miniapp-backend-production.up.railway.app/api/auth/telegram", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          telegramId: user.id,
+          username: user.username,
+          firstName: user.first_name,
+          lastName: user.last_name
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        // If successful, redirect to main miniapp
+        window.location.href = "index.html"; // or miniapp.html, whichever is your main app
+      })
+      .catch(err => {
+        console.error("Error storing user data:", err);
+        alert("Failed to store user data. Check console for details.");
+      });
+    }
+
+    // Step E: Connect Wallet (Optional)
+    // For demonstration, this just logs a message. In a real app, 
+    // you’d integrate with MetaMask, TronLink, etc.
+    function connectWallet() {
+      alert("Wallet connection flow goes here (Metamask, TronLink, etc.)");
+    }
+  </script>
+</body>
+</html>
