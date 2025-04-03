@@ -57,12 +57,15 @@
   <div class="login-container">
     <h1>Welcome to TGBotX Mini-App</h1>
     <p>Please log in with your Telegram account to continue.</p>
-    <!-- This div will either remain empty (if in Telegram) or load the login widget (if not) -->
+    <!-- The widget area: will remain empty if native user data is available -->
     <div id="widgetArea"></div>
   </div>
 
   <script>
-    // Function to send user data to your backend and redirect to your main mini-app
+    // Log the environment for debugging purposes
+    console.log("Page loaded. Checking for Telegram WebApp...");
+
+    // Function to send user data to backend and redirect
     function storeUserAndRedirect(user) {
       console.log("Storing user data and redirecting:", user);
       fetch("https://tgbotx-miniapp-backend-production.up.railway.app/api/auth/telegram", {
@@ -77,7 +80,7 @@
       })
       .then(res => res.json())
       .then(() => {
-        // After a successful login, redirect to your main app page
+        // After successful data storage, redirect to main mini-app page
         window.location.href = "index.html";
       })
       .catch(err => {
@@ -86,22 +89,23 @@
       });
     }
 
-    // Check if the mini-app is loaded inside Telegram's native WebApp
+    // Check if we're running inside Telegram's native WebApp
     if (typeof Telegram !== "undefined" && Telegram.WebApp) {
+      console.log("Telegram.WebApp detected.");
       const tg = Telegram.WebApp;
       tg.expand(); // Expand to full screen
       const user = tg.initDataUnsafe?.user;
-      console.log("Telegram WebApp detected. User data:", user);
+      console.log("Native user data:", user);
       if (user) {
-        // If user data is available natively, use it and bypass the widget
+        // If native user data is available, immediately use it and do not load the widget
         storeUserAndRedirect(user);
       } else {
-        // If no native user data is available, show a message (should rarely happen)
+        console.warn("No native user data available.");
         document.getElementById("widgetArea").innerHTML = "<p>Unable to retrieve Telegram user data. Please try again.</p>";
       }
     } else {
-      // If not inside Telegram, load the Telegram Login Widget to let users log in externally.
-      console.log("Not inside Telegram. Loading Telegram Login Widget.");
+      // If not inside Telegram, load the Telegram Login Widget as a fallback.
+      console.log("Not running inside Telegram. Loading Login Widget.");
       var widgetScript = document.createElement("script");
       widgetScript.async = true;
       widgetScript.src = "https://telegram.org/js/telegram-widget.js?15";
@@ -111,13 +115,13 @@
       widgetScript.setAttribute("data-request-access", "write");
       widgetScript.setAttribute("data-onauth", "onTelegramAuth(user)");
       document.getElementById("widgetArea").appendChild(widgetScript);
-      
-      // Define the callback for the widget authentication
+
+      // Define the callback function for widget authentication
       window.onTelegramAuth = function(user) {
-        console.log("Telegram Login Widget auth user:", user);
+        console.log("Widget auth callback received user:", user);
         storeUserAndRedirect(user);
       };
-      
+
       alert("For the best experience, please open this mini-app within Telegram.");
     }
   </script>
