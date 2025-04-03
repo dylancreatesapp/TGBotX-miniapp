@@ -5,7 +5,7 @@
   <title>Login | TGBotX Mini-App</title>
   <style>
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: sans-serif;
       background: #111;
       color: #fff;
       margin: 0;
@@ -31,30 +31,26 @@
     .login-container p {
       margin-bottom: 1.5rem;
       font-size: 1rem;
-      line-height: 1.4;
+      line-height: 1.5;
     }
     .btn {
-      background-color: #444;
-      color: #fff;
+      display: inline-block;
       padding: 14px 24px;
+      background: linear-gradient(90deg, #0072ff, #00c6ff);
       border: none;
       border-radius: 6px;
-      cursor: pointer;
-      margin: 10px 0;
+      color: #fff;
       font-size: 1rem;
+      cursor: pointer;
+      text-decoration: none;
       transition: background 0.3s;
     }
     .btn:hover {
-      background-color: #555;
+      opacity: 0.9;
     }
-    /* The widget area is hidden by default; shown only if needed (outside Telegram). */
     #widgetArea {
       display: none;
       margin-top: 20px;
-    }
-    /* Make sure the Telegram button is nicely centered and has spacing. */
-    .telegram-login-wrapper {
-      margin-bottom: 1rem;
     }
   </style>
 </head>
@@ -62,8 +58,7 @@
   <div class="login-container">
     <h1>Welcome to TGBotX Mini-App</h1>
     <p>Please log in with your Telegram account to continue.</p>
-
-    <!-- Telegram Login Widget (shown only if not inside Telegram) -->
+    <!-- Widget area shown only if needed -->
     <div id="widgetArea">
       <div class="telegram-login-wrapper">
         <script async src="https://telegram.org/js/telegram-widget.js?15"
@@ -74,34 +69,34 @@
                 data-onauth="onTelegramAuth(user)">
         </script>
       </div>
-      <button class="btn" onclick="connectWallet()">Connect Wallet</button>
     </div>
   </div>
 
   <script>
-    // Check if we're inside Telegram's WebApp environment
+    // Check if the mini-app is loaded within Telegram
     if (typeof Telegram !== "undefined" && Telegram.WebApp) {
       const tg = Telegram.WebApp;
-      tg.expand();  // Make the WebApp full screen if possible
+      tg.expand(); // Expand the mini-app to full screen
       const user = tg.initDataUnsafe?.user;
       if (user) {
-        // We have Telegram user data automatically. No widget needed.
+        // If user data is available natively, log in without redirecting externally
         storeUserAndRedirect(user);
       } else {
-        // Fallback if user data isn't present
+        // If no native user data, show the login widget as a fallback
         document.getElementById("widgetArea").style.display = "block";
       }
     } else {
-      // If not in Telegram, show the Telegram Login Widget
+      // If not inside Telegram, show the widget and alert the user for best experience
       document.getElementById("widgetArea").style.display = "block";
+      alert("For the best experience, please open this mini-app within Telegram.");
     }
 
-    // Called by the Telegram Login Widget (when outside Telegram)
+    // Function called by the Telegram Login Widget when outside Telegram
     function onTelegramAuth(user) {
       storeUserAndRedirect(user);
     }
 
-    // Send user data to your backend, then redirect to main mini-app
+    // Function to send user data to the backend and then redirect to the main app page
     function storeUserAndRedirect(user) {
       fetch("https://tgbotx-miniapp-backend-production.up.railway.app/api/auth/telegram", {
         method: "POST",
@@ -115,18 +110,13 @@
       })
       .then(res => res.json())
       .then(() => {
-        // Redirect to your main mini-app after successful login
-        window.location.href = "index.html"; 
+        // Redirect to your main mini-app page (index.html)
+        window.location.href = "index.html";
       })
       .catch(err => {
         console.error("Error storing user data:", err);
-        alert("Failed to store user data. Check console for details.");
+        alert("Failed to store user data. Please try again.");
       });
-    }
-
-    // (Optional) Connect Wallet
-    function connectWallet() {
-      alert("Wallet connection flow goes here (e.g., Metamask, TronLink, etc.)");
     }
   </script>
 </body>
