@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <!-- iOS meta tags to enable native web app behavior -->
+  <!-- iOS meta tags to help promote native in-app behavior -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -66,11 +66,11 @@
   </div>
 
   <script>
-    // Debug logs for troubleshooting
+    // Debug logging to help troubleshoot native detection
     console.log("User Agent:", navigator.userAgent);
     console.log("Is Telegram.WebApp defined?", typeof Telegram !== "undefined" && Telegram.WebApp);
 
-    // Function to send user data to your backend and redirect to the main mini-app page
+    // Function to send user data to your backend and redirect
     function storeUserAndRedirect(user) {
       console.log("Storing user data and redirecting:", user);
       fetch("https://tgbotx-miniapp-backend-production.up.railway.app/api/auth/telegram", {
@@ -85,7 +85,6 @@
       })
       .then(res => res.json())
       .then(() => {
-        // Redirect to your main mini-app page after successful login
         window.location.href = "index.html";
       })
       .catch(err => {
@@ -94,22 +93,21 @@
       });
     }
 
-    // Check if we're running inside Telegram's native WebApp environment
+    // Check if we're inside Telegram's native WebApp environment
     if (typeof Telegram !== "undefined" && Telegram.WebApp) {
       console.log("Telegram.WebApp detected.");
       const tg = Telegram.WebApp;
-      tg.expand(); // Expand to full screen
+      tg.expand();
       const user = tg.initDataUnsafe?.user;
       console.log("Native user data:", user);
       if (user) {
-        // If native user data is available, immediately use it and do not load the widget
         storeUserAndRedirect(user);
       } else {
         console.warn("No native user data available.");
         document.getElementById("widgetArea").innerHTML = "<p>Unable to retrieve Telegram user data. Please try again.</p>";
       }
     } else {
-      // If not inside Telegram, load the Telegram Login Widget as a fallback.
+      // Fallback: load the Telegram Login Widget if not in a native context
       console.log("Not running inside Telegram. Loading Login Widget.");
       var widgetScript = document.createElement("script");
       widgetScript.async = true;
@@ -121,7 +119,6 @@
       widgetScript.setAttribute("data-onauth", "onTelegramAuth(user)");
       document.getElementById("widgetArea").appendChild(widgetScript);
 
-      // Define the callback for the Telegram Login Widget
       window.onTelegramAuth = function(user) {
         console.log("Widget auth callback received user:", user);
         storeUserAndRedirect(user);
