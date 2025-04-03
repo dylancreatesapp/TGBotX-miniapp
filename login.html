@@ -2,6 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <!-- iOS meta tags to enable native web app behavior -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Login | TGBotX Mini-App</title>
   <style>
     body {
@@ -57,15 +61,16 @@
   <div class="login-container">
     <h1>Welcome to TGBotX Mini-App</h1>
     <p>Please log in with your Telegram account to continue.</p>
-    <!-- The widget area: will remain empty if native user data is available -->
+    <!-- This div is for the Telegram Login Widget if native data is not available -->
     <div id="widgetArea"></div>
   </div>
 
   <script>
-    // Log the environment for debugging purposes
-    console.log("Page loaded. Checking for Telegram WebApp...");
+    // Debug logs for troubleshooting
+    console.log("User Agent:", navigator.userAgent);
+    console.log("Is Telegram.WebApp defined?", typeof Telegram !== "undefined" && Telegram.WebApp);
 
-    // Function to send user data to backend and redirect
+    // Function to send user data to your backend and redirect to the main mini-app page
     function storeUserAndRedirect(user) {
       console.log("Storing user data and redirecting:", user);
       fetch("https://tgbotx-miniapp-backend-production.up.railway.app/api/auth/telegram", {
@@ -80,7 +85,7 @@
       })
       .then(res => res.json())
       .then(() => {
-        // After successful data storage, redirect to main mini-app page
+        // Redirect to your main mini-app page after successful login
         window.location.href = "index.html";
       })
       .catch(err => {
@@ -89,7 +94,7 @@
       });
     }
 
-    // Check if we're running inside Telegram's native WebApp
+    // Check if we're running inside Telegram's native WebApp environment
     if (typeof Telegram !== "undefined" && Telegram.WebApp) {
       console.log("Telegram.WebApp detected.");
       const tg = Telegram.WebApp;
@@ -116,7 +121,7 @@
       widgetScript.setAttribute("data-onauth", "onTelegramAuth(user)");
       document.getElementById("widgetArea").appendChild(widgetScript);
 
-      // Define the callback function for widget authentication
+      // Define the callback for the Telegram Login Widget
       window.onTelegramAuth = function(user) {
         console.log("Widget auth callback received user:", user);
         storeUserAndRedirect(user);
