@@ -49,7 +49,6 @@
       opacity: 0.9;
     }
     #widgetArea {
-      display: none;
       margin-top: 20px;
     }
   </style>
@@ -58,46 +57,14 @@
   <div class="login-container">
     <h1>Welcome to TGBotX Mini-App</h1>
     <p>Please log in with your Telegram account to continue.</p>
-    <!-- Widget area shown only if needed -->
-    <div id="widgetArea">
-      <div class="telegram-login-wrapper">
-        <script async src="https://telegram.org/js/telegram-widget.js?15"
-                data-telegram-login="TGBotXutility_bot"
-                data-size="large"
-                data-userpic="false"
-                data-request-access="write"
-                data-onauth="onTelegramAuth(user)">
-        </script>
-      </div>
-    </div>
+    <!-- This div will either remain empty (if in Telegram) or load the login widget (if not) -->
+    <div id="widgetArea"></div>
   </div>
 
   <script>
-    // Check if the mini-app is loaded within Telegram
-    if (typeof Telegram !== "undefined" && Telegram.WebApp) {
-      const tg = Telegram.WebApp;
-      tg.expand(); // Expand the mini-app to full screen
-      const user = tg.initDataUnsafe?.user;
-      if (user) {
-        // If user data is available natively, log in without redirecting externally
-        storeUserAndRedirect(user);
-      } else {
-        // If no native user data, show the login widget as a fallback
-        document.getElementById("widgetArea").style.display = "block";
-      }
-    } else {
-      // If not inside Telegram, show the widget and alert the user for best experience
-      document.getElementById("widgetArea").style.display = "block";
-      alert("For the best experience, please open this mini-app within Telegram.");
-    }
-
-    // Function called by the Telegram Login Widget when outside Telegram
-    function onTelegramAuth(user) {
-      storeUserAndRedirect(user);
-    }
-
-    // Function to send user data to the backend and then redirect to the main app page
+    // Function to send user data to your backend and redirect to your main mini-app
     function storeUserAndRedirect(user) {
+      console.log("Storing user data and redirecting:", user);
       fetch("https://tgbotx-miniapp-backend-production.up.railway.app/api/auth/telegram", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -110,13 +77,48 @@
       })
       .then(res => res.json())
       .then(() => {
-        // Redirect to your main mini-app page (index.html)
+        // After a successful login, redirect to your main app page
         window.location.href = "index.html";
       })
       .catch(err => {
         console.error("Error storing user data:", err);
         alert("Failed to store user data. Please try again.");
       });
+    }
+
+    // Check if the mini-app is loaded inside Telegram's native WebApp
+    if (typeof Telegram !== "undefined" && Telegram.WebApp) {
+      const tg = Telegram.WebApp;
+      tg.expand(); // Expand to full screen
+      const user = tg.initDataUnsafe?.user;
+      console.log("Telegram WebApp detected. User data:", user);
+      if (user) {
+        // If user data is available natively, use it and bypass the widget
+        storeUserAndRedirect(user);
+      } else {
+        // If no native user data is available, show a message (should rarely happen)
+        document.getElementById("widgetArea").innerHTML = "<p>Unable to retrieve Telegram user data. Please try again.</p>";
+      }
+    } else {
+      // If not inside Telegram, load the Telegram Login Widget to let users log in externally.
+      console.log("Not inside Telegram. Loading Telegram Login Widget.");
+      var widgetScript = document.createElement("script");
+      widgetScript.async = true;
+      widgetScript.src = "https://telegram.org/js/telegram-widget.js?15";
+      widgetScript.setAttribute("data-telegram-login", "TGBotXutility_bot");
+      widgetScript.setAttribute("data-size", "large");
+      widgetScript.setAttribute("data-userpic", "false");
+      widgetScript.setAttribute("data-request-access", "write");
+      widgetScript.setAttribute("data-onauth", "onTelegramAuth(user)");
+      document.getElementById("widgetArea").appendChild(widgetScript);
+      
+      // Define the callback for the widget authentication
+      window.onTelegramAuth = function(user) {
+        console.log("Telegram Login Widget auth user:", user);
+        storeUserAndRedirect(user);
+      };
+      
+      alert("For the best experience, please open this mini-app within Telegram.");
     }
   </script>
 </body>
