@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <!-- iOS meta tags to help promote native in-app behavior -->
+  <!-- iOS meta tags to promote native behavior -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -26,7 +26,7 @@
       text-align: center;
       width: 90%;
       max-width: 400px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
     }
     .login-container h1 {
       margin-bottom: 1rem;
@@ -37,94 +37,49 @@
       font-size: 1rem;
       line-height: 1.5;
     }
-    .btn {
-      display: inline-block;
-      padding: 14px 24px;
-      background: linear-gradient(90deg, #0072ff, #00c6ff);
-      border: none;
-      border-radius: 6px;
-      color: #fff;
-      font-size: 1rem;
-      cursor: pointer;
-      text-decoration: none;
-      transition: background 0.3s;
-    }
-    .btn:hover {
-      opacity: 0.9;
-    }
-    #widgetArea {
-      margin-top: 20px;
-    }
   </style>
 </head>
 <body>
   <div class="login-container">
-    <h1>Welcome to TGBotX Mini-App</h1>
-    <p>Please log in with your Telegram account to continue.</p>
-    <!-- This div is for the Telegram Login Widget if native data is not available -->
-    <div id="widgetArea"></div>
+    <h1>Logging you in...</h1>
+    <p>Please wait while we process your login data.</p>
   </div>
-
   <script>
-    // Debug logging to help troubleshoot native detection
-    console.log("User Agent:", navigator.userAgent);
-    console.log("Is Telegram.WebApp defined?", typeof Telegram !== "undefined" && Telegram.WebApp);
+    // Function to extract tgWebAppData from the URL fragment
+    function getTgWebAppData() {
+      const hash = window.location.hash;
+      if (hash.startsWith("#tgWebAppData=")) {
+        return decodeURIComponent(hash.substring("#tgWebAppData=".length));
+      }
+      return null;
+    }
 
-    // Function to send user data to your backend and redirect
-    function storeUserAndRedirect(user) {
-      console.log("Storing user data and redirecting:", user);
+    const tgData = getTgWebAppData();
+    console.log("Received tgWebAppData:", tgData);
+
+    if (tgData) {
+      // Send tgData to your backend for verification and login processing.
       fetch("https://tgbotx-miniapp-backend-production.up.railway.app/api/auth/telegram", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          telegramId: user.id,
-          username: user.username,
-          firstName: user.first_name,
-          lastName: user.last_name
-        })
+        body: JSON.stringify({ tgData: tgData })
       })
-      .then(res => res.json())
-      .then(() => {
-        window.location.href = "index.html";
+      .then(response => response.json())
+      .then(result => {
+        console.log("Login result:", result);
+        if (result.success) {
+          // Redirect to your main mini-app page (e.g., index.html)
+          window.location.href = "index.html";
+        } else {
+          document.querySelector('.login-container p').innerText = "Login failed: " + result.message;
+        }
       })
       .catch(err => {
-        console.error("Error storing user data:", err);
-        alert("Failed to store user data. Please try again.");
+        console.error("Error processing login:", err);
+        document.querySelector('.login-container p').innerText = "An error occurred. Please try again.";
       });
-    }
-
-    // Check if we're inside Telegram's native WebApp environment
-    if (typeof Telegram !== "undefined" && Telegram.WebApp) {
-      console.log("Telegram.WebApp detected.");
-      const tg = Telegram.WebApp;
-      tg.expand();
-      const user = tg.initDataUnsafe?.user;
-      console.log("Native user data:", user);
-      if (user) {
-        storeUserAndRedirect(user);
-      } else {
-        console.warn("No native user data available.");
-        document.getElementById("widgetArea").innerHTML = "<p>Unable to retrieve Telegram user data. Please try again.</p>";
-      }
     } else {
-      // Fallback: load the Telegram Login Widget if not in a native context
-      console.log("Not running inside Telegram. Loading Login Widget.");
-      var widgetScript = document.createElement("script");
-      widgetScript.async = true;
-      widgetScript.src = "https://telegram.org/js/telegram-widget.js?15";
-      widgetScript.setAttribute("data-telegram-login", "TGBotXutility_bot");
-      widgetScript.setAttribute("data-size", "large");
-      widgetScript.setAttribute("data-userpic", "false");
-      widgetScript.setAttribute("data-request-access", "write");
-      widgetScript.setAttribute("data-onauth", "onTelegramAuth(user)");
-      document.getElementById("widgetArea").appendChild(widgetScript);
-
-      window.onTelegramAuth = function(user) {
-        console.log("Widget auth callback received user:", user);
-        storeUserAndRedirect(user);
-      };
-
-      alert("For the best experience, please open this mini-app within Telegram.");
+      document.querySelector('.login-container p').innerText = "No login data received. Please try again.";
     }
   </script>
 </body>
