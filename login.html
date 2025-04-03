@@ -2,11 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <!-- iOS meta tags to encourage in-app behavior -->
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Login | TGBotX Mini-App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Login | TGBotX Mini-App</title>
   <style>
     body {
       font-family: sans-serif;
@@ -19,150 +17,73 @@
       align-items: center;
       min-height: 100vh;
     }
-    .login-container {
+    .container {
       background: #222;
-      padding: 30px;
-      border-radius: 10px;
-      text-align: center;
+      padding: 20px;
+      border-radius: 8px;
       width: 90%;
       max-width: 400px;
       box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      text-align: center;
     }
-    .login-container h1 {
-      margin-bottom: 1rem;
-      font-size: 1.5rem;
+    input[type="email"], input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 4px;
     }
-    .login-container p {
-      margin-bottom: 1.5rem;
+    button {
+      background: linear-gradient(90deg, #0072ff, #00c6ff);
+      border: none;
+      border-radius: 4px;
+      color: #fff;
+      padding: 12px 20px;
+      cursor: pointer;
       font-size: 1rem;
-      line-height: 1.5;
     }
-    #widgetArea {
-      margin-top: 20px;
+    button:hover {
+      opacity: 0.9;
     }
   </style>
 </head>
 <body>
-  <div class="login-container">
-    <h1>Logging you in...</h1>
-    <p id="statusMsg">Detecting your Telegram environment...</p>
-    <div id="widgetArea"></div>
+  <div class="container">
+    <h1>Email Login</h1>
+    <div id="formContainer">
+      <input type="email" id="email" placeholder="Enter your email" required>
+      <button onclick="sendVerification()">Send Verification Email</button>
+    </div>
+    <div id="verifyContainer" style="display: none;">
+      <p>A verification link has been sent to your email. Please click the link to log in.</p>
+    </div>
   </div>
-  
+
   <script>
-    console.log("User Agent:", navigator.userAgent);
-
-    // 1) If Telegram.WebApp is defined, we use native WebApp data
-    if (typeof Telegram !== "undefined" && Telegram.WebApp) {
-      console.log("Telegram.WebApp detected.");
-      const tg = Telegram.WebApp;
-      tg.expand();
-      const user = tg.initDataUnsafe?.user;
-      console.log("Native user data:", user);
-      if (user) {
-        document.getElementById("statusMsg").innerText = "Logging in via native WebApp data...";
-        storeUserAndRedirect({
-          id: user.id,
-          username: user.username,
-          first_name: user.first_name,
-          last_name: user.last_name
-        });
-      } else {
-        console.warn("No native user data found in WebApp. Checking for tgWebAppData...");
-        checkTgWebAppData();
+    function sendVerification() {
+      const email = document.getElementById('email').value;
+      if (!email) {
+        alert("Please enter a valid email address.");
+        return;
       }
-    } else {
-      console.log("Not inside Telegram.WebApp. Checking for tgWebAppData next...");
-      checkTgWebAppData();
-    }
-
-    // 2) If no WebApp user data, parse tgWebAppData from login_url
-    function checkTgWebAppData() {
-      const hash = window.location.hash;
-      console.log("Window location hash:", hash);
-      if (hash.startsWith("#tgWebAppData=")) {
-        const tgData = decodeURIComponent(hash.substring("#tgWebAppData=".length));
-        console.log("tgWebAppData found:", tgData);
-        document.getElementById("statusMsg").innerText = "Logging in via login_url data...";
-        // Send to backend
-        fetch("https://tgbotx-miniapp-backend-production.up.railway.app/api/auth/telegram", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ tgData })
-        })
-        .then(r => r.json())
-        .then(result => {
-          console.log("Login result:", result);
-          if (result.success) {
-            window.location.href = "index.html";
-          } else {
-            document.getElementById("statusMsg").innerText = "Login failed: " + result.message;
-          }
-        })
-        .catch(err => {
-          console.error("Error verifying tgData:", err);
-          document.getElementById("statusMsg").innerText = "Error verifying login data. Please try again.";
-        });
-      } else {
-        console.log("No tgWebAppData in URL. Falling back to Telegram Login Widget.");
-        loadTelegramLoginWidget();
-      }
-    }
-
-    // 3) If neither WebApp user data nor tgWebAppData is found, load the Telegram Login Widget
-    function loadTelegramLoginWidget() {
-      document.getElementById("statusMsg").innerText = "No native data. Loading Telegram Login Widget...";
-      var widgetScript = document.createElement("script");
-      widgetScript.async = true;
-      widgetScript.src = "https://telegram.org/js/telegram-widget.js?15";
-      widgetScript.setAttribute("data-telegram-login", "TGBotXutility_bot");
-      widgetScript.setAttribute("data-size", "large");
-      widgetScript.setAttribute("data-userpic", "false");
-      widgetScript.setAttribute("data-request-access", "write");
-      widgetScript.setAttribute("data-onauth", "onTelegramAuth(user)");
-      document.getElementById("widgetArea").appendChild(widgetScript);
-    }
-
-    // Called by the Telegram Login Widget upon successful login
-    function onTelegramAuth(user) {
-      console.log("Widget auth callback user:", user);
-      document.getElementById("statusMsg").innerText = "Logging in via widget data...";
-      storeUserAndRedirect(user);
-    }
-
-    // Helper function to send user data to backend and redirect
-    function storeUserAndRedirect(user) {
-      fetch("https://tgbotx-miniapp-backend-production.up.railway.app/api/auth/telegram", {
+      fetch("https://tgbotx-miniapp-backend-production.up.railway.app/api/auth/send-verification", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          tgData: buildQueryString(user)
-        })
+        body: JSON.stringify({ email })
       })
-      .then(res => res.json())
-      .then(result => {
-        console.log("storeUserAndRedirect result:", result);
-        if (result.success) {
-          window.location.href = "index.html";
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          document.getElementById('formContainer').style.display = "none";
+          document.getElementById('verifyContainer').style.display = "block";
         } else {
-          document.getElementById("statusMsg").innerText = "Login failed: " + result.message;
+          alert("Error: " + data.message);
         }
       })
       .catch(err => {
-        console.error("Error storing user data:", err);
-        document.getElementById("statusMsg").innerText = "Failed to store user data. Please try again.";
+        console.error("Error sending verification:", err);
+        alert("An error occurred. Please try again.");
       });
-    }
-
-    // Utility to build a query string from user object (mimicking Telegram’s format)
-    function buildQueryString(userObj) {
-      const params = new URLSearchParams();
-      Object.keys(userObj).forEach(key => {
-        params.append(key, userObj[key]);
-      });
-      // Typically you'd need 'auth_date' and 'hash' for a real Telegram login flow,
-      // but for demonstration, we just pass user fields.
-      return params.toString();
     }
   </script>
 </body>
